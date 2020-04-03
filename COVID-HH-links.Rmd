@@ -1,0 +1,19 @@
+---
+title: "COVID-HH-links"
+author: "Steven M. Goodreau"
+date: "3/24/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## To Do
+
+1. Get network plot to work as expected 
+2. Review SEIR code, esp. in terms of node colors
+3. Go back and document
+4. Review lit for parameters - Imperial and MIDAS
+5. Tweak sims to behave as expected
+6. Explore scenarios
