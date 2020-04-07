@@ -278,7 +278,7 @@ If you are part of that large connected component, then now your household can r
 
 OK, maybe households with multiple people could all agree that only one person can hang out with one friend. This seems like it should have a lot less connectivity, right? 
 
-Let's see:
+## Let's see:
 
 ```{r non.essl.net.2, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=5, fig.width=5, fig.align="center"}
 meandeg.non.essl.2 <- 0.999
