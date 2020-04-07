@@ -70,7 +70,7 @@ The connections among the nodes are so numerous that you can't even make sense o
 
 Let's put a few numbers on it for comparison to later scenarios:
 
-- One important feature of a network that helps us to understand how far something might spread on it is the size of the **"largest connected component"**. That refers to the largest set of households who are all reachable to one another along any possible path. In this case, every household can be reached from every other household along at least one path---indeed, along many different ones---so the largest connected component includes **`r largcomp.precov`, or `r round(100*largcomp.precov/n, 0)`%, of the households**.
+- One important feature of a network that helps us to understand how far something might spread on it is the size of the **"largest connected component"**. That refers to the largest set of households who are all **reachable** to one another along any possible path---that is, there is at least one path of any length that connects the two households. In this case, every household can be reached from every other household along at least one path---indeed, along many different ones---so the largest connected component includes **`r largcomp.precov`, or `r round(100*largcomp.precov/n, 0)`%, of the households**.
 
 - Another way of looking at connectivity is to count how many **paths** of different lengths there are.  For instance, if household A is connected to household B, which is in turn connected to household C, which is in turn connected to household D, then that would represent a 3-path, because there are three links (A-B-C-D). One can count up all the 2-paths in a network, or the 3-paths, or 4-paths, and so on. Each one gives a sense of how well connected the network is.  For simplicity, let's focus on 3-paths. This network has **`r format(kpath.precov, scientific=F, big.mark=',')` different 3-paths**. That's a lot of different routes for a virus to transmit on!  Note that people on those paths don't all have to know one another.  If you're in household A, and you or a family member gets infected, then **you could end up at the start of a chain that leads to household D getting infected, without you ever knowing who they are or the fact that they became sick!** And with COVID-19, that could all happen before you have any symptoms and know that you're infected.
 
@@ -85,7 +85,7 @@ plot(emptynet, vertex.cex=1.5, mode="kamadakawai", vertex.col=3, edge.col="gray2
 
 Here, the **largest connected component is of size 1**: every household is isolated from every other household. And of course there are **no 3-paths**.
 
-What does that mean? Here the virus would not be able to spread from household to household at all, because there are no links. Anyone who had it might pass it onto the other members of their household, and each of those people would either die or recover.  But the virus could not spread to other households; it would quickly disappear.
+What does that mean? Here the virus would not be able to spread from household to household at all, because there are no links. **No household is reachable from any other.** Anyone who had it might pass it onto the other members of their household, and each of those people would either die or recover.  But the virus could not spread to other households; it would quickly disappear.
 
 # Adding in the essential workers
 
@@ -135,7 +135,7 @@ Let us be very clear here: some people are going to get infected, and some peopl
 
 But these connections are so essential that we as a society are willing to make that trade-off. Without them, many more people would die of other basic things besides COVID-19: starvation, freezing, crime, other diseases.
 
-And hopefully, the deaths here won't be that high. First off, most households are still effectively isolated. And second, those that are connected are only held together by a pretty sparse set of ties, as reflected by the low number of 3-paths. Since transmission is not 100% guaranteed, not all of those in the same component as an infected person will become infected. The fewer the different  routes connecting an infected person and a susceptible person, the less likely transmission will reach from one to the other.
+And hopefully, the deaths here won't be that high. First off, most households are still effectively isolated. And second, those that are connected are only held together by a pretty sparse set of ties, as reflected by the low number of 3-paths. Since transmission is not 100% guaranteed, not all of those in the same component as an infected person will become infected. This set of households are all **reachable** from one another, but it's not guaranteed that they will all actually be reached by a virus present in that component. The fewer the different routes connecting an infected person and a susceptible person, the less likely transmission will reach from one to the other.
 
 # Visiting just one friend
 
@@ -146,7 +146,6 @@ So let us see what that might do to our network. But in doing so, we must rememb
 Let's say, then, that an average of two people in each household decide to each  maintain an in-person social connection with one person.  This is an average---some households will have none, and some will have 3, but on average it's 2. Note that this is still less than the average household size---not everybody is meeting up with a friend.
 
 So let's visualize what would happen when we lay these new connections on top of the essential worker network:
-
 
 ```{r non.essl.net.1, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE}
 meandeg.non.essl.1 <- 2
@@ -165,6 +164,8 @@ Wow! This network is a lot more connected than the one with just essential worke
 Indeed, the **largest connected component contains `r largcomp.comb.1`, or `r round(100*largcomp.comb.1/n, 1)`%, of households.** That is **`r round(largcomp.comb.1/largcomp.essl, 1)` times larger than the essential network.**
 
 And **the number of 3-paths here is `r kpath.comb.1`**.  That's **`r round(kpath.comb.1/kpath.essl, 1)` times larger than in the essential worker network!**  That's a lot more connections.  And therefore a lot more transmission, and a lot more death. Just so people can hang out with one friend!
+
+If you are part of that large connected component, then now your household can reach `r round(100*largcomp.comb.1/n, 1)`% of the households in your community, and they can reach you! You may not even know the people in these households, and you won't even know whether you're part of that group or not. But the virus can easily travel along the network of connections to get from them to you, especially when there are multiple paths through the network. It's a very connected, and effective, network of transmission.
 
 # Visiting just one friend per household
 
