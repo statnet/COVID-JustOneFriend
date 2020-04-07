@@ -5,7 +5,7 @@ author:
  - Steven M. Goodreau, University of Washington
  - Martina Morris, University of Washington
  - on behalf of the Statnet Development Team
-date: "3/31/2020"
+date: "4/3/2020"
 output:
   html_document:
     highlight: kate
@@ -54,6 +54,7 @@ Then we get something like this:
 
 ```{r pre-COVID, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE}
 library(statnet)
+set.seed(0)
 n <- 200
 emptynet <- network.initialize(n, directed=FALSE)
 meandeg.precov <- 15
@@ -69,7 +70,7 @@ The connections among the nodes are so numerous that you can't even make sense o
 
 Let's put a few numbers on it for comparison to later scenarios:
 
-- One important feature of a network that helps us to understand how far something might spread on it is the size of the **largest component**.  That means the largest number of people who are all connected together by some possible path.  In this case, the largest component includes **`r largcomp.precov`, or `r round(100*largcomp.precov/n, 0)`%, of the households**.
+- One important feature of a network that helps us to understand how far something might spread on it is the size of the **"largest connected component"**. That refers to the largest set of households who are all reachable to one another along any possible path. If you look at the network, you can immediately see it---the folks that are part of the one long chain at the lower left. In this case, the largest connected component includes **`r largcomp.precov`, or `r round(100*largcomp.precov/n, 0)`%, of the households**.
 
 - Another way of looking at connectivity is to count how many **paths** of different lengths there are.  For instance, if household A is connected to household B, which is in turn connected to household C, which is in turn connected to household D, then that would represent a 3-path, because there are three links (A-B-C-D). One can count up all the 2-paths in a network, or the 3-paths, or 4-paths, and so on. Each one gives a sense of how well connected the network is.  For simplicity, let's focus on 3-paths. This network has **`r format(kpath.precov, scientific=F, big.mark=',')` different 3-paths**. That's a lot of different routes for a virus to transmit on!  Note that people on those paths don't all have to know one another.  If you're in household A, and you or a family member gets infected, then **you could end up at the start of a chain that leads to household D getting infected, without you ever knowing who they are or the fact that they became sick!** And with COVID-19, that could all happen before you have any symptoms and know that you're infected.
 
@@ -82,7 +83,7 @@ par(mai=c(0,0,0,0))
 plot(emptynet, vertex.cex=1.5, mode="kamadakawai", vertex.col=3, edge.col="gray20")
 ```
 
-Here, the **largest component is of size 1**: every household is isolated from every other household. And of course there are **no 3-paths**.
+Here, the **largest connected component is of size 1**: every household is isolated from every other household. And of course there are **no 3-paths**.
 
 What does that mean? Here the virus would not be able to spread from household to household at all, because there are no links. Anyone who had it might pass it onto the other members of their household, and each of those people would either die or recover.  But the virus could not spread to other households; it would quickly disappear.
 
@@ -126,7 +127,7 @@ kpath.essl <- sna:::kpath.census(net.essl)$path.count[3,'Agg']/2
 
 You can see that the virus has some room to move around again.  Not nearly as much as in the days before social distancing, but still some. And it isn't just between the households with essential workers and their direct contacts.  Sometimes the same household will be connected to two essential workers, creating a longer path. Sometimes two households with essential workers will end up directly connected, putting their two sets of contacts into the same path.
 
-Altogether, we see here a **largest component of size `r largcomp.essl`, or `r round(100*largcomp.essl/n, 1)`%, of households.** This is a lot smaller than 100%, and a fair bit bigger than 0%.
+Altogether, we see here a **largest connected component of size `r largcomp.essl`, or `r round(100*largcomp.essl/n, 1)`%, of households.** This is a lot smaller than 100%, and a fair bit bigger than 0%.
 
 But households within the same component generally don't have lots of different paths by which they're connected.  So in total, there are **only `r kpath.essl` 3-paths.**  That's more than 0, but *much much much* less than 348,744!
 
@@ -161,7 +162,7 @@ kpath.comb.1 <- sna:::kpath.census(net.comb.1)$path.count[3,'Agg']/2
 
 Wow! This network is a lot more connected than the one with just essential workers.  
 
-Indeed, the **largest component contains `r largcomp.comb.1`, or `r round(100*largcomp.comb.1/n, 1)`%, of households.** That is **`r round(largcomp.comb.1/largcomp.essl, 1)` times larger than the essential network.**
+Indeed, the **largest connected component contains `r largcomp.comb.1`, or `r round(100*largcomp.comb.1/n, 1)`%, of households.** That is **`r round(largcomp.comb.1/largcomp.essl, 1)` times larger than the essential network.**
 
 And **the number of 3-paths here is `r kpath.comb.1`**.  That's **`r round(kpath.comb.1/kpath.essl, 1)` times larger than in the essential worker network!**  That's a lot more connections.  And therefore a lot more transmission, and a lot more death. Just so people can hang out with one friend!
 
@@ -169,7 +170,7 @@ And **the number of 3-paths here is `r kpath.comb.1`**.  That's **`r round(kpath
 
 OK, maybe households with multiple people could all agree that only one person can hang out with one friend. That is, maybe parents don't feel like they need friend time as much as their kid does. Of course, if there are multiple kids, that creates a problem - eveyone will want to be the one who gets to hang out with their friend!  But let's say we could make it work.  This seems like it should have a lot less connectivity, right? Pairs of households become connected, but then they don't create the same chains that are possible when there are two connections per household.
 
-To examine this, then, we won't just set an *average* of one non-essential tie per household; we'll make it the maximum---every household has exactly one. Maybe this will create much less connectivity than? Let's see:
+To examine this, then, we won't just set an *average* of one non-essential tie per household; we'll make every household have exactly one, and no more. Maybe this will create much less connectivity than the case of two friends per household? Let's see:
 
 ```{r non.essl.net.2, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE}
 meandeg.non.essl.2 <- 0.999
@@ -183,7 +184,7 @@ largcomp.comb.2 <- sum(component.largest(net.comb.2))
 kpath.comb.2 <- sna:::kpath.census(net.comb.2)$path.count[3,'Agg']/2
 ```
 
-This still creates a fair amount of connection - the **largest component contains `r largcomp.comb.2`.** That's still the majority of households, at  **`r round(100*largcomp.comb.2/n, 1)`%,** and **`r round(largcomp.comb.2/largcomp.essl, 1)` times larger than the essential network.**
+This still creates a fair amount of connection - the **largest connected component contains `r largcomp.comb.2`.** That's still the majority of households, at  **`r round(100*largcomp.comb.2/n, 1)`%,** and **`r round(largcomp.comb.2/largcomp.essl, 1)` times larger than the essential network.**
 
 And there are still **`r kpath.comb.2`** 3-paths, or **`r round(kpath.comb.2/kpath.essl, 1)` times more than in the essential worker network alone.** That still allows for a lot of extra transmissions and illnesses and hospitalizations and deaths.
 
@@ -191,19 +192,19 @@ And there are still **`r kpath.comb.2`** 3-paths, or **`r round(kpath.comb.2/kpa
 
 **Humans are social animals, and breaking up the connectivity in social networks is hard.** And some connections just can't broken at all if we want to maintain the basic functioning of the systems we need in place to all live. Other conections laid on top of those create more network connectivity than you might think. And thus, **every additional connection that we can postpone until COVID-19 is under control has the potential to save one or more lives.**  Yes, **every one**. You may never know whether it made a difference, and if it did, exactly whose life was saved. 
 
-They may be multiple degrees of separation away from you. 
+- They may be multiple degrees of separation away from you. 
 
-They may be your friend's mother's patient's father. 
+- They may be your friend's mother's patient's father. 
 
-They may be your sister's friend's grandfather's doctor. 
+- They may be your sister's friend's grandfather's doctor. 
 
-They may be the daughter of the grocery store worker where your friend's parents shop. 
+- They may be the daughter of the grocery store worker where your friend's parents shop. 
 
 **Regardless of who it is---waiting a bit to hang out your friends again is worth it!**
 
 # The fine print for those who are interested: model caveats
 
-Now, you may be thinking -- isn't this picture a bit simplistic, in a bunch of ways? Not everybody fits neatly into households; for example, some people live in group quarters like dorms or nursing homes, some kids divide their time between two parental households, and some people are homeless. Surely there is a lot more variation in connections among people than you seem to have here. And surely relationships are actually dynamic---they form and break over time, and not everyone sees the same people from the same households every day.  
+Now, you may be thinking -- isn't this picture a bit simplistic, in a bunch of ways? Not everybody fits neatly into households; for example, some people live in group quarters like dorms or nursing homes, some kids divide their time between two parental households, and some people are homeless. Surely there is a lot more variation in connections among people than you seem to have here. It seems that, beyond a few simple rules about numbers of connections per household, you are assuming that households pick each other randomly, and surely there is a lot more structure to real networks than that. And surely relationships are actually dynamic---they form and break over time, and not everyone sees the same people from the same households every day.  
 
 All of those points are true. But we put them aside and purposefully simplified the world a bit so that we could gain some clear insight about those scenarios first. This is a common approach in scientific investigation in general, and network epidemiology in particular.  Once one gains those insights, then one can begin adding in more complexity. Actual models used in the field of network epidemiology typically have a lot more complexity in them than the versions we look at here---but these are great for communicating basic principles to a broad audience.
 
