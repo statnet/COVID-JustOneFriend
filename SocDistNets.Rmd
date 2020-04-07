@@ -48,11 +48,9 @@ As network epidemiologists, this is our effort to explain why these connections 
 
 # The Good Ol' Days {.tabset .tabset-pills .tabset-fade}
 
-Let's start by imagining back to the good old days, just a few short weeks or months ago, before COVID-19 took off.  People had lots of daily interactions with lots of other people. They obviously varied in how many they had---some people had many, and some had few---but overall the number was a lot higher. 
+Let's start by imagining back to the good old days, just a few short weeks or months ago, before COVID-19 took off.  People had lots of daily interactions with lots of other people. They obviously varied in how many they had---some people had many, and some had few---but overall the number was a lot higher. Let's say, for the sake of the example, that the average household had 15 regular interactions with other households.
 
-Now try to imagine what that might look like if you drew it. Often we visualize networks like that using diagrams with nodes and links.  Here we'll make one in which the **nodes (green dots) represent individual households**, and the **links (gray lines) represent frequent, repeated interactions** between any members of two households. We'll consider scenarios involving 200 households, a small enough number that we can visualize the networks easily.
-
-Let's say, for the sake of the example, that the average household had 15 regular interactions with other households. The exact number doesn't matter much here - we just want to imagine a world that is much more connected than it is under social distancing. 
+Now try to imagine what that might look like if you drew it. 
 
 ## Then we get something like this:
 
@@ -76,7 +74,9 @@ kpath.precov <- sna:::kpath.census(net.precov)$path.count[3,'Agg']/2
 <br>
 
 ## What's going on? 
-The connections among the nodes are so numerous that you can't even make sense of them - it's all just a single dense mass of ties. For a new virus that is able to spread across those ties, and to which everyone is susceptible, life is pretty good.
+Often we visualize networks like this using diagrams with nodes and links.  Here we'll make one in which the **nodes (green dots) represent individual households**, and the **links (gray lines) represent frequent, repeated interactions** between any members of two households. We'll consider scenarios involving 200 households, a small enough number that we can visualize the networks easily, and 15 ties per household (the exact number doesn't matter much here - we just want to imagine a world that is much more connected than it is under social distancing).
+ 
+The result:  The connections among the nodes are so numerous that you can't even make sense of them - it's all just a single dense mass of ties. For a new virus that is able to spread across those ties, and to which everyone is susceptible, life is pretty good.
 
 Let's put a few numbers on it for comparison to later scenarios:
 
@@ -146,20 +146,11 @@ What does that mean? Here the virus would not be able to spread from household t
 
 # Adding in the essential workers {.tabset .tabset-pills .tabset-fade}
 
-Of course, that world is impossible. 
+Of course, that world is impossible.  Why? Because some people work in jobs that are essential to maintain the safety, health and well-being of all of us: health care workers, first responders, grocery store workers, etc.
 
-Why? Because certain interactions are essential to maintain the safety, health and well-being of all of us:
-
-- We need doctors and nurses and EMTs interacting with people.
-- We need all the people that get food to us---growing it, transporting it, selling it---to interact with people.
-- We need the people who manage and maintain our water supply and electricity and gas to keep showing up at work.
-- We need first responders keeping us safe.
-- In big cities, we need transport workers helping all of these people get back and forth between work and home.
-- And so on. 
-
-So, let's imagine what this might do to our network. It's hard to put real numbers on this, but we'll start with what seems like a reasonable example. (For those who are interested and who have some R coding skills, all of the code for these examples is at the bottom of this page, and you can explore different numbers.)
-
-Let's say that 1 in every 10 households contains someone with a job where they need to continue some connections. And the average number of connections they have is 4. In reality, they may interact with many more people, but if they are able to use standard advice about hand washing and some distancing throughout the course of their work, let's say they're able to bring their average *effective* contacts, in terms of transmission probability, down to 4.  If we **color the households with an essential worker as blue**, that gives us...
+So, let's imagine what this might do to our network. 
+Let's say that 1 in every 10 households contains someone with a job where they need to continue some connections. And the average number of connections they have is 4. 
+If we **color the households with an essential worker as blue**, that gives us...
 
 ## Something that looks like this:
 
@@ -187,7 +178,18 @@ kpath.essl <- sna:::kpath.census(net.essl)$path.count[3,'Agg']/2
 <br>
 
 ## What's going on? 
-(You may notice that some essential households have more than 4 ties and some fewer---again, we just set the average and allowed there to be random variation around this).
+Even when States order people to "Stay Home", there are execptions for essential workers:
+
+- We need doctors and nurses and EMTs interacting with people.
+- We need all the people that get food to us---growing it, transporting it, selling it---to interact with people.
+- We need the people who manage and maintain our water supply and electricity and gas to keep showing up at work.
+- We need first responders keeping us safe.
+- In big cities, we need transport workers helping all of these people get back and forth between work and home.
+- And so on. 
+
+It's hard to put real numbers on this, but we'll start with what seems like a reasonable example. (For those who are interested and who have some R coding skills, all of the code for these examples is accessible on GitHub, info in the last section of this document, and you can explore different numbers.)
+
+In reality, they may interact with many more people, but if they are able to use standard advice about hand washing and some distancing throughout the course of their work, let's say they're able to bring their average *effective* contacts, in terms of transmission probability, down to 4.  (You may notice that some essential households have more than 4 ties and some fewer---again, we just set the average and allowed there to be random variation around this).
 
 You can see that the virus has some room to move around again.  Not nearly as much as in the days before social distancing, but still some. And it isn't just between the households with essential workers and their direct contacts.  Sometimes the same household will be connected to two essential workers, creating a longer path. Sometimes two households with essential workers will end up directly connected, putting their two sets of contacts into the same path.
 
@@ -212,11 +214,7 @@ And hopefully, the deaths here won't be that high. First off, most households ar
 
 But, we all know now: strict social distancing starts to get boring after a while. And meeting up to hang out with just one person outside your household---a friend especially---is pretty tempting.  And it just doesn't seem like such a big deal when these other connections are already happening, right?
 
-So let us see what that might do to our network. But in doing so, we must remember a crucial fact: most households have more than one person in them. In fact, the **average household size in the US is 2.6 people.** Let's say, then, that you decide to meet up with your friend Sue.  But if Sue's parents are letting her go out, then they probably also need to let her brother Ed go out to meet up with his friend.
-
-Let's say, then, that an average of two people in each household decide to each  maintain an in-person social connection with one person.  This is an average---some households will have none, and some will have 3, but on average it's 2. Note that this is still less than the average household size---not everybody is meeting up with a friend.
-
-So let's visualize what would happen when we lay these new connections on top of the essential worker network. 
+What happens if an average of two people in each household each decide to maintain an in-person social connection with one person from another household. 
 
 ## Looks like: 
 
@@ -240,6 +238,12 @@ kpath.comb.1 <- sna:::kpath.census(net.comb.1)$path.count[3,'Agg']/2
 
 ## What's going on?
 Wow! This network is a lot more connected than the one with just essential workers.  
+
+Most households have more than one person in them. In fact, the **average household size in the US is 2.6 people.**   Some households will have none, and some will have 3, but on average it's 2.6.
+
+Let's say, then, that you decide to meet up with your friend Sue.  But if Sue's parents are letting her go out, then they probably also need to let her brother Ed go out to meet up with his friend.  Note that this is still less than the average household size---not everybody is meeting up with a friend.
+
+What happens when we lay these new connections on top of the essential worker network?  A lot more connectivity.
 
 Indeed, the **largest connected component contains `r largcomp.comb.1`, or `r round(100*largcomp.comb.1/n, 1)`%, of households.** That is **`r round(largcomp.comb.1/largcomp.essl, 1)` times larger than the essential network.**
 
@@ -272,11 +276,9 @@ If you are part of that large connected component, then now your household can r
 
 # Visiting just one friend per household {.tabset .tabset-pills .tabset-fade}
 
-OK, maybe households with multiple people could all agree that only one person can hang out with one friend. That is, maybe parents don't feel like they need friend time as much as their kid does. Of course, if there are multiple kids, that creates a problem - eveyone will want to be the one who gets to hang out with their friend!  But let's say we could make it work.  This seems like it should have a lot less connectivity, right? Pairs of households become connected, but then they don't create the same chains that are possible when there are two connections per household.
+OK, maybe households with multiple people could all agree that only one person can hang out with one friend. This seems like it should have a lot less connectivity, right? 
 
-To examine this, then, we won't just set an *average* of one non-essential tie per household; we'll make every household have exactly one, and no more. Maybe this will create much less connectivity than the case of two friends per household? 
-
-##Let's see:
+Let's see:
 
 ```{r non.essl.net.2, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=5, fig.width=5, fig.align="center"}
 meandeg.non.essl.2 <- 0.999
@@ -296,6 +298,11 @@ kpath.comb.2 <- sna:::kpath.census(net.comb.2)$path.count[3,'Agg']/2
 <br>
 
 ## What's going on? 
+
+Maybe parents don't feel like they need friend time as much as their kid does. Of course, if there are multiple kids, that creates a problem - eveyone will want to be the one who gets to hang out with their friend!  But let's say we could make it work.  
+
+To examine this, then, we won't just set an *average* of one non-essential tie per household; we'll make every household have exactly one, and no more. Pairs of households become connected, but then they don't create the same chains that are possible when there are two connections per household.  Does create much less connectivity than the case of two friends per household?  Not really.
+
 This still creates a fair amount of connection - the **largest connected component contains `r largcomp.comb.2`.** That's still the majority of households, at  **`r round(100*largcomp.comb.2/n, 1)`%,** and **`r round(largcomp.comb.2/largcomp.essl, 1)` times larger than the essential network.**
 
 And there are still **`r kpath.comb.2`** 3-paths, or **`r round(kpath.comb.2/kpath.essl, 1)` times more than in the essential worker network alone.** That still allows for a lot of extra transmissions and illnesses and hospitalizations and deaths.
@@ -326,7 +333,11 @@ And there are still **`r kpath.comb.2`** 3-paths, or **`r round(kpath.comb.2/kpa
 
 # Lessons learned
 
-**Humans are social animals, and breaking up the connectivity in social networks is hard.** And some connections just can't broken at all if we want to maintain the basic functioning of the systems we need in place to all live. Other conections laid on top of those create more network connectivity than you might think. And thus, **every additional connection that we can postpone until COVID-19 is under control has the potential to save one or more lives.**  Yes, **every one**. You may never know whether it made a difference, and if it did, exactly whose life was saved. 
+**Humans are social animals, and reducing connectivity in social networks is hard.** 
+And some connections just can't broken at all if we want to maintain the basic functioning of the systems we need in place to all live. Other conections laid on top of those create more network connectivity than you might think. And thus, 
+
+**Every additional connection that we can postpone until COVID-19 is under control has the potential to save one or more lives.**  Yes, **every one**.  
+You may never know whether it made a difference, and if it did, exactly whose life was saved. 
 
 - They may be multiple degrees of separation away from you. 
 
@@ -343,7 +354,9 @@ And there are still **`r kpath.comb.2`** 3-paths, or **`r round(kpath.comb.2/kpa
 <br>
 <br>
 
-# The fine print for those who are interested: model caveats
+# The fine print for those who are interested: {.tabset}
+
+## Model caveats
 
 Now, you may be thinking -- isn't this picture a bit simplistic, in a bunch of ways? Not everybody fits neatly into households; for example, some people live in group quarters like dorms or nursing homes, some kids divide their time between two parental households, and some people are homeless. Surely there is a lot more variation in connections among people than you seem to have here. It seems that, beyond a few simple rules about numbers of connections per household, you are assuming that households pick each other randomly, and surely there is a lot more structure to real networks than that. And surely relationships are actually dynamic---they form and break over time, and not everyone sees the same people from the same households every day.  
 
@@ -354,7 +367,7 @@ All of those points are true. But we put them aside and purposefully simplified 
 <br>
 <br>
 
-# Model code
+## Model code
 
 For those of you who find this interesting and have some coding skills in R, we include all of the code for all of these examples for you to look at and play with and change values for or add complexity to, as you wish.  Note that these examples use the *statnet* suite of R packages.  Thank you goes to the full **statnet development team** for all of these. Full citation information is:
 
