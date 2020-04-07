@@ -70,7 +70,7 @@ The connections among the nodes are so numerous that you can't even make sense o
 
 Let's put a few numbers on it for comparison to later scenarios:
 
-- One important feature of a network that helps us to understand how far something might spread on it is the size of the **"largest connected component"**. That refers to the largest set of households who are all reachable to one another along any possible path. If you look at the network, you can immediately see it---the folks that are part of the one long chain at the lower left. In this case, the largest connected component includes **`r largcomp.precov`, or `r round(100*largcomp.precov/n, 0)`%, of the households**.
+- One important feature of a network that helps us to understand how far something might spread on it is the size of the **"largest connected component"**. That refers to the largest set of households who are all reachable to one another along any possible path. In this case, every household can be reached from every other household along at least one path---indeed, along many different ones---so the largest connected component includes **`r largcomp.precov`, or `r round(100*largcomp.precov/n, 0)`%, of the households**.
 
 - Another way of looking at connectivity is to count how many **paths** of different lengths there are.  For instance, if household A is connected to household B, which is in turn connected to household C, which is in turn connected to household D, then that would represent a 3-path, because there are three links (A-B-C-D). One can count up all the 2-paths in a network, or the 3-paths, or 4-paths, and so on. Each one gives a sense of how well connected the network is.  For simplicity, let's focus on 3-paths. This network has **`r format(kpath.precov, scientific=F, big.mark=',')` different 3-paths**. That's a lot of different routes for a virus to transmit on!  Note that people on those paths don't all have to know one another.  If you're in household A, and you or a family member gets infected, then **you could end up at the start of a chain that leads to household D getting infected, without you ever knowing who they are or the fact that they became sick!** And with COVID-19, that could all happen before you have any symptoms and know that you're infected.
 
@@ -127,7 +127,7 @@ kpath.essl <- sna:::kpath.census(net.essl)$path.count[3,'Agg']/2
 
 You can see that the virus has some room to move around again.  Not nearly as much as in the days before social distancing, but still some. And it isn't just between the households with essential workers and their direct contacts.  Sometimes the same household will be connected to two essential workers, creating a longer path. Sometimes two households with essential workers will end up directly connected, putting their two sets of contacts into the same path.
 
-Altogether, we see here a **largest connected component of size `r largcomp.essl`, or `r round(100*largcomp.essl/n, 1)`%, of households.** This is a lot smaller than 100%, and a fair bit bigger than 0%.
+Altogether, we see here a **largest connected component of size `r largcomp.essl`, or `r round(100*largcomp.essl/n, 1)`%, of households.** (Can you find it?) This is a lot smaller than 100%, and a fair bit bigger than 0%.
 
 But households within the same component generally don't have lots of different paths by which they're connected.  So in total, there are **only `r kpath.essl` 3-paths.**  That's more than 0, but *much much much* less than 348,744!
 
