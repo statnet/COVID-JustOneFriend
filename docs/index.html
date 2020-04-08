@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 
 <meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Steven M. Goodreau, University of Washington" />
+<meta name="author" content="Emily D. Pollock, University of Washington" />
+<meta name="author" content="Jeanette K. Birnbaum, University of Washington" />
 <meta name="author" content="Martina Morris, University of Washington" />
 <meta name="author" content="on behalf of the Statnet Development Team" />
 
@@ -1313,7 +1316,7 @@ window.initializeCodeFolding = function(show) {
 
     // create a collapsable div to wrap the code in
     var div = $('<div class="collapse r-code-collapse"></div>');
-    if (show || $(this)[0].classList.contains('fold-show'))
+    if (show)
       div.addClass('in');
     var id = 'rcode-643E0F36' + currentIndex++;
     div.attr('id', id);
@@ -2624,9 +2627,9 @@ window.onload = function() {
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -2636,16 +2639,14 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -2657,7 +2658,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #a0a0a0;  padding-le
 div.sourceCode
   { color: #1f1c1b; background-color: #ffffff; }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span. { color: #1f1c1b; } /* Normal */
 code span.al { color: #bf0303; background-color: #f7e6e6; font-weight: bold; } /* Alert */
@@ -2771,6 +2772,7 @@ code {
 }
 img {
   max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -2832,7 +2834,6 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
-  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -2864,12 +2865,6 @@ summary {
 }
 }
 
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
 
 .toc-content {
   padding-left: 30px;
@@ -2951,6 +2946,8 @@ div.tocify {
 <h1 class="title toc-ignore"><strong>Can’t I <em>please</em> just visit one friend?</strong></h1>
 <h3 class="subtitle">Visualizing social distancing networks in the era of COVID-19</h3>
 <h4 class="author">Steven M. Goodreau, University of Washington</h4>
+<h4 class="author">Emily D. Pollock, University of Washington</h4>
+<h4 class="author">Jeanette K. Birnbaum, University of Washington</h4>
 <h4 class="author">Martina Morris, University of Washington</h4>
 <h4 class="author">on behalf of the Statnet Development Team</h4>
 <h4 class="date">4/3/2020</h4>
@@ -2985,8 +2982,8 @@ div.tocify {
 <p>The result: The connections among the nodes are so numerous that you can’t even make sense of them - it’s all just a single dense mass of ties. For a new virus that is able to spread across those ties, and to which everyone is susceptible, life is pretty good.</p>
 <p>Let’s put a few numbers on it for comparison to later scenarios:</p>
 <ul>
-<li><p>One important feature of a network that helps us to understand how far something might spread on it is the size of the <strong>“largest connected component”</strong>. That refers to the largest set of households who are all <strong>reachable</strong> to one another along any possible path—that is, there is at least one path of any length that connects the two households. In this case, every household can be reached from every other household along at least one path—indeed, along many different ones—so the largest connected component includes <strong>200, or 100%, of the households</strong>.</p></li>
-<li><p>Another way of looking at connectivity is to count how many <strong>paths</strong> of different lengths there are. For instance, if household A is connected to household B, which is in turn connected to household C, which is in turn connected to household D, then that would represent a 3-path, because there are three links (A-B-C-D). One can count up all the 2-paths in a network, or the 3-paths, or 4-paths, and so on. Each one gives a sense of how well connected the network is. For simplicity, let’s focus on 3-paths. This network has <strong>380,880 different 3-paths</strong>. That’s a lot of different routes for a virus to transmit on! Note that people on those paths don’t all have to know one another. If you’re in household A, and you or a family member gets infected, then <strong>you could end up at the start of a chain that leads to household D getting infected, without you ever knowing who they are or the fact that they became sick!</strong> And with COVID-19, that could all happen before you have any symptoms and know that you’re infected.</p></li>
+<li><p>One important feature of a network that helps us to understand how far something might spread on it is the size of the <strong>“largest cluster”</strong>. That refers to the largest set of households who are all <strong>reachable</strong> to one another along any possible path—that is, there is at least one path of any length that connects the two households. (The technical term for this in network theory is a “component”, but we think the idea of a “cluster” is more familar to most people). Within a cluster, every household can be reached from every other household along at least one path—indeed, along many different ones—so the largest cluster includes <strong>200, or 100%, of the households</strong>.</p></li>
+<li><p>Another way of looking at connectivity is to count how many <strong>paths</strong> of different lengths there are. For instance, if household A is connected to household B, which is in turn connected to household C, which is in turn connected to household D, then that would represent a 3-path, because there are three links (A-B-C-D). One can count up all the 2-paths in a network, or the 3-paths, or 4-paths, and so on. Each one gives a sense of how well connected the network is–how many different routes are there that infection can spread on.. For simplicity, let’s focus on 3-paths. This network has <strong>380,880 different 3-paths</strong>. That’s a lot of different routes for a virus to transmit on! Note that people on those paths don’t all have to know one another. If you’re in household A, and you or a family member gets infected, then <strong>you could end up at the start of a chain that leads to household D getting infected, without you ever knowing who they are or the fact that they became sick!</strong> And with COVID-19, that could all happen before you have any symptoms and know that you’re infected.</p></li>
 </ul>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 </div>
@@ -3001,7 +2998,7 @@ div.tocify {
 </div>
 <div id="whats-going-on-1" class="section level2">
 <h2><span class="header-section-number">3.2</span> What’s going on?</h2>
-<p>Here, the <strong>largest connected component is of size 1</strong>: every household is isolated from every other household. And of course there are <strong>no 3-paths</strong>.</p>
+<p>Here, the <strong>largest cluster is of size 1</strong>: every household is isolated from every other household. And of course there are <strong>no 3-paths</strong>.</p>
 <p>What does that mean? Here the virus would not be able to spread from household to household at all, because there are no links. <strong>No household is reachable from any other.</strong> Anyone who had it might pass it onto the other members of their household, and each of those people would either die or recover. But the virus could not spread to other households; it would quickly disappear.</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 </div>
@@ -3028,11 +3025,11 @@ div.tocify {
 <p>It’s hard to put real numbers on this, but we’ll start with what seems like a reasonable example. (For those who are interested and who have some R coding skills, all of the code for these examples is accessible on GitHub, info in the last section of this document, and you can explore different numbers.)</p>
 <p>In reality, they may interact with many more people, but if they are able to use standard advice about hand washing and some distancing throughout the course of their work, let’s say they’re able to bring their average <em>effective</em> contacts, in terms of transmission probability, down to 4. (You may notice that some essential households have more than 4 ties and some fewer—again, we just set the average and allowed there to be random variation around this).</p>
 <p>You can see that the virus has some room to move around again. Not nearly as much as in the days before social distancing, but still some. And it isn’t just between the households with essential workers and their direct contacts. Sometimes the same household will be connected to two essential workers, creating a longer path. Sometimes two households with essential workers will end up directly connected, putting their two sets of contacts into the same path.</p>
-<p>Altogether, we see here a <strong>largest connected component of size 53, or 26.5%, of households.</strong> (Can you find it?) This is a lot smaller than 100%, and a fair bit bigger than 0%.</p>
-<p>But households within the same component generally don’t have lots of different paths by which they’re connected. So in total, there are <strong>only 137 3-paths.</strong> That’s more than 0, but <em>much much much</em> less than 348,744!</p>
+<p>Altogether, we see here a <strong>largest cluster of size 53, or 26.5%, of households.</strong> (Can you find it?) This is a lot smaller than 100%, and a fair bit bigger than 0%.</p>
+<p>But households within the same cluster generally don’t have lots of different paths by which they’re connected. So in total, there are <strong>only 137 3-paths.</strong> That’s more than 0, but <em>much much much</em> less than 348,744!</p>
 <p>Let us be very clear here: some people are going to get infected, and some people are going to die, because of these connections. It’s that simple.</p>
 <p>But these connections are so essential that we as a society are willing to make that trade-off. Without them, many more people would die of other basic things besides COVID-19: starvation, freezing, crime, other diseases.</p>
-<p>And hopefully, the deaths here won’t be that high. First off, most households are still effectively isolated. And second, those that are connected are only held together by a pretty sparse set of ties, as reflected by the low number of 3-paths. Since transmission is not 100% guaranteed, not all of those in the same component as an infected person will become infected. This set of households are all <strong>reachable</strong> from one another, but it’s not guaranteed that they will all actually be reached by a virus present in that component. The fewer the different routes connecting an infected person and a susceptible person, the less likely transmission will reach from one to the other.</p>
+<p>And hopefully, the deaths here won’t be that high. First off, most households are still effectively isolated. And second, those that are connected are only held together by a pretty sparse set of ties, as reflected by the low number of 3-paths. Since transmission is not 100% guaranteed, not all of those in the same cluster as an infected person will become infected. This set of households are all <strong>reachable</strong> from one another, but it’s not guaranteed that they will all actually be reached by a virus present in that cluster. The fewer the different routes connecting an infected person and a susceptible person, the less likely transmission will reach from one to the other.</p>
 <p><br> <br> <br> <br> <br> <br></p>
 </div>
 </div>
@@ -3051,9 +3048,9 @@ div.tocify {
 <p>Most households have more than one person in them. In fact, the <strong>average household size in the US is 2.6 people.</strong> Some households will have none, and some will have 3, but on average it’s 2.6.</p>
 <p>Let’s say, then, that you decide to meet up with your friend Sue. But if Sue’s parents are letting her go out, then they probably also need to let her brother Ed go out to meet up with his friend. Note that this is still less than the average household size—not everybody is meeting up with a friend.</p>
 <p>What happens when we lay these new connections on top of the essential worker network? A lot more connectivity.</p>
-<p>Indeed, the <strong>largest connected component contains 181, or 90.5%, of households.</strong> That is <strong>3.4 times larger than the essential network.</strong></p>
+<p>Indeed, the <strong>largest cluster contains 181, or 90.5%, of households.</strong> That is <strong>3.4 times larger than the essential network.</strong></p>
 <p>And <strong>the number of 3-paths here is 3178</strong>. That’s <strong>23.2 times larger than in the essential worker network!</strong> That’s a lot more connections. And therefore a lot more transmission, and a lot more death. Just so people can hang out with one friend!</p>
-<p>If you are part of that large connected component, then now your household can reach 90.5% of the households in your community, and they can reach you! You may not even know the people in these households, and you won’t even know whether you’re part of that group or not. But the virus can easily travel along the network of connections to get from them to you, especially when there are multiple paths through the network. It’s a very connected, and effective, network of transmission.</p>
+<p>If you are part of that large cluster, then now your household can reach 90.5% of the households in your community, and they can reach you! You may not even know the people in these households, and you won’t even know whether you’re part of that group or not. But the virus can easily travel along the network of connections to get from them to you, especially when there are multiple paths through the network. It’s a very connected, and effective, network of transmission.</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 </div>
 </div>
@@ -3069,8 +3066,8 @@ div.tocify {
 <h2><span class="header-section-number">6.2</span> What’s going on?</h2>
 <p>Maybe parents don’t feel like they need friend time as much as their kid does. Of course, if there are multiple kids, that creates a problem - eveyone will want to be the one who gets to hang out with their friend! But let’s say we could make it work.</p>
 <p>To examine this, then, we won’t just set an <em>average</em> of one non-essential tie per household; we’ll make every household have exactly one, and no more. Pairs of households become connected, but then they don’t create the same chains that are possible when there are two connections per household. Does create much less connectivity than the case of two friends per household? Not really.</p>
-<p>This still creates a fair amount of connection - the <strong>largest connected component contains 142.</strong> That’s still the majority of households, at <strong>71%,</strong> and <strong>2.7 times larger than the essential network.</strong></p>
-<p>And there are still <strong>697</strong> 3-paths, or <strong>5.1 times more than in the essential worker network alone.</strong> That still allows for a lot of extra transmissions and illnesses and hospitalizations and deaths.</p>
+<p>This still creates a fair amount of connection - the <strong>largest cluster contains 142.</strong> That’s still the majority of households, at <strong>71%,</strong> and <strong>2.7 times larger than the essential network.</strong></p>
+<p>And there are still <strong>697 3-paths</strong>, or <strong>5.1 times more than in the essential worker network alone.</strong> That still allows for a lot of extra transmissions and illnesses and hospitalizations and deaths.</p>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 </div>
 </div>
@@ -3089,7 +3086,7 @@ You may never know whether it made a difference, and if it did, exactly whose li
 <p><br> <br> <br> <br></p>
 </div>
 <div id="the-fine-print-for-those-who-are-interested" class="section level1 tabset">
-<h1><span class="header-section-number">8</span> The fine print for those who are interested:</h1>
+<h1><span class="header-section-number">8</span> The fine print for those who are interested</h1>
 <div id="model-caveats" class="section level2">
 <h2><span class="header-section-number">8.1</span> Model caveats</h2>
 <p>Now, you may be thinking – isn’t this picture a bit simplistic, in a bunch of ways? Not everybody fits neatly into households; for example, some people live in group quarters like dorms or nursing homes, some kids divide their time between two parental households, and some people are homeless. Surely there is a lot more variation in connections among people than you seem to have here. It seems that, beyond a few simple rules about numbers of connections per household, you are assuming that households pick each other randomly, and surely there is a lot more structure to real networks than that. And surely relationships are actually dynamic—they form and break over time, and not everyone sees the same people from the same households every day.</p>
@@ -3100,57 +3097,57 @@ You may never know whether it made a difference, and if it did, exactly whose li
 <h2><span class="header-section-number">8.2</span> Model code</h2>
 <p>For those of you who find this interesting and have some coding skills in R, we include all of the code for all of these examples for you to look at and play with and change values for or add complexity to, as you wish. Note that these examples use the <em>statnet</em> suite of R packages. Thank you goes to the full <strong>statnet development team</strong> for all of these. Full citation information is:</p>
 <p>Mark S. Handcock, David R. Hunter, Carter T. Butts, Steven M. Goodreau, Pavel N. Krivitsky, Skye Bender-deMoll, and Martina Morris (2019). statnet: Software tools for the Statistical Modeling of Network Data. versin 2019.6. URL <a href="http://statnet.org" class="uri">http://statnet.org</a>, <a href="https://cran.r-project.org/web/packages/statnet/" class="uri">https://cran.r-project.org/web/packages/statnet/</a>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">## setup</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(statnet)</span>
-<span id="cb1-3"><a href="#cb1-3"></a>n &lt;-<span class="st"> </span><span class="dv">200</span></span>
-<span id="cb1-4"><a href="#cb1-4"></a>emptynet &lt;-<span class="st"> </span><span class="kw">network.initialize</span>(n, <span class="dt">directed=</span><span class="ot">FALSE</span>)</span>
-<span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a><span class="co">## pre-COVID network</span></span>
-<span id="cb1-7"><a href="#cb1-7"></a>meandeg.precov &lt;-<span class="st"> </span><span class="dv">15</span></span>
-<span id="cb1-8"><a href="#cb1-8"></a>fit.precov &lt;-<span class="st"> </span><span class="kw">ergm</span>(emptynet<span class="op">~</span>edges, <span class="dt">target.stats=</span>meandeg.precov<span class="op">*</span>n<span class="op">/</span><span class="dv">2</span>)</span>
-<span id="cb1-9"><a href="#cb1-9"></a>net.precov &lt;-<span class="st"> </span><span class="kw">simulate</span>(fit.precov)</span>
-<span id="cb1-10"><a href="#cb1-10"></a><span class="kw">plot</span>(net.precov, <span class="dt">vertex.cex=</span><span class="fl">1.5</span>, <span class="dt">mode=</span><span class="st">&quot;kamadakawai&quot;</span>, <span class="dt">vertex.col=</span><span class="dv">3</span>,</span>
-<span id="cb1-11"><a href="#cb1-11"></a>     <span class="dt">edge.col=</span><span class="st">&quot;gray20&quot;</span>)</span>
-<span id="cb1-12"><a href="#cb1-12"></a>largcomp.precov &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">component.largest</span>(net.precov))</span>
-<span id="cb1-13"><a href="#cb1-13"></a></span>
-<span id="cb1-14"><a href="#cb1-14"></a><span class="co">## empty network</span></span>
-<span id="cb1-15"><a href="#cb1-15"></a><span class="kw">plot</span>(emptynet, <span class="dt">vertex.cex=</span><span class="fl">1.5</span>, <span class="dt">mode=</span><span class="st">&quot;kamadakawai&quot;</span>, <span class="dt">vertex.col=</span><span class="dv">3</span>,</span>
-<span id="cb1-16"><a href="#cb1-16"></a>     <span class="dt">edge.col=</span><span class="st">&quot;gray20&quot;</span>)</span>
-<span id="cb1-17"><a href="#cb1-17"></a></span>
-<span id="cb1-18"><a href="#cb1-18"></a><span class="co">## essential network</span></span>
-<span id="cb1-19"><a href="#cb1-19"></a>meandeg.essl &lt;-<span class="st"> </span><span class="dv">4</span></span>
-<span id="cb1-20"><a href="#cb1-20"></a>prop.essl &lt;-<span class="st"> </span><span class="fl">0.1</span></span>
-<span id="cb1-21"><a href="#cb1-21"></a>essl &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, n)</span>
-<span id="cb1-22"><a href="#cb1-22"></a>essl[<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="kw">round</span>(prop.essl<span class="op">*</span>n,<span class="dv">0</span>), <span class="dt">replace=</span><span class="ot">FALSE</span>)] &lt;-<span class="st"> </span><span class="dv">1</span></span>
-<span id="cb1-23"><a href="#cb1-23"></a><span class="kw">set.vertex.attribute</span>(emptynet, <span class="st">&#39;essl&#39;</span>, essl)</span>
-<span id="cb1-24"><a href="#cb1-24"></a>fit.essl &lt;-<span class="st"> </span><span class="kw">ergm</span>(emptynet<span class="op">~</span>edges<span class="op">+</span><span class="st"> </span><span class="kw">nodematch</span>(<span class="st">&quot;essl&quot;</span>, <span class="dt">diff=</span><span class="ot">TRUE</span>, <span class="dt">levels=</span><span class="dv">1</span>),</span>
-<span id="cb1-25"><a href="#cb1-25"></a>              <span class="dt">target.stats=</span> <span class="kw">c</span>(meandeg.essl<span class="op">*</span>prop.essl<span class="op">*</span>n, <span class="dv">0</span>),</span>
-<span id="cb1-26"><a href="#cb1-26"></a>              <span class="dt">control=</span><span class="kw">control.ergm</span>(<span class="dt">MCMC.burnin =</span> <span class="fl">1e6</span>))</span>
-<span id="cb1-27"><a href="#cb1-27"></a>net.essl &lt;-<span class="st"> </span><span class="kw">simulate</span>(fit.essl, <span class="dt">control =</span> <span class="kw">control.simulate</span>(<span class="dt">MCMC.burnin =</span> <span class="fl">1e6</span>))</span>
-<span id="cb1-28"><a href="#cb1-28"></a>net.essl.el &lt;-<span class="st"> </span><span class="kw">as.edgelist</span>(net.essl)</span>
-<span id="cb1-29"><a href="#cb1-29"></a><span class="kw">plot</span>(net.essl, <span class="dt">vertex.cex=</span><span class="fl">1.5</span>, <span class="dt">vertex.col=</span><span class="dv">3</span><span class="op">+</span>essl, <span class="dt">edge.col=</span><span class="st">&quot;gray20&quot;</span>)</span>
-<span id="cb1-30"><a href="#cb1-30"></a>largcomp.essl &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">component.largest</span>(net.essl))</span>
-<span id="cb1-31"><a href="#cb1-31"></a>kpath.essl &lt;-<span class="st"> </span>sna<span class="op">:::</span><span class="kw">kpath.census</span>(net.essl)<span class="op">$</span>path.count[<span class="dv">3</span>,<span class="st">&#39;Agg&#39;</span>]<span class="op">/</span><span class="dv">2</span></span>
-<span id="cb1-32"><a href="#cb1-32"></a></span>
-<span id="cb1-33"><a href="#cb1-33"></a><span class="co">## non.essl.net.1</span></span>
-<span id="cb1-34"><a href="#cb1-34"></a>meandeg.non.essl<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="dv">2</span></span>
-<span id="cb1-35"><a href="#cb1-35"></a>fit.non.essl<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">ergm</span>(emptynet<span class="op">~</span>edges, <span class="dt">target.stats=</span> meandeg.non.essl<span class="fl">.1</span><span class="op">*</span>n<span class="op">/</span><span class="dv">2</span>)</span>
-<span id="cb1-36"><a href="#cb1-36"></a>net.non.essl<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">simulate</span>(fit.non.essl<span class="fl">.1</span>)</span>
-<span id="cb1-37"><a href="#cb1-37"></a>net.comb<span class="fl">.1</span> &lt;-<span class="st"> </span>net.non.essl<span class="fl">.1</span></span>
-<span id="cb1-38"><a href="#cb1-38"></a>net.comb<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">add.edges</span>(net.comb<span class="fl">.1</span>, <span class="dt">tail=</span>net.essl.el[,<span class="dv">1</span>], <span class="dt">head=</span>net.essl.el[,<span class="dv">2</span>])</span>
-<span id="cb1-39"><a href="#cb1-39"></a><span class="kw">plot</span>(net.comb<span class="fl">.1</span>, <span class="dt">vertex.cex=</span><span class="fl">1.5</span>, <span class="dt">vertex.col=</span><span class="dv">3</span><span class="op">+</span>essl, <span class="dt">edge.col=</span><span class="st">&quot;gray20&quot;</span>)</span>
-<span id="cb1-40"><a href="#cb1-40"></a>largcomp.comb<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">component.largest</span>(net.comb<span class="fl">.1</span>))</span>
-<span id="cb1-41"><a href="#cb1-41"></a>kpath.comb<span class="fl">.1</span> &lt;-<span class="st"> </span>sna<span class="op">:::</span><span class="kw">kpath.census</span>(net.comb<span class="fl">.1</span>)<span class="op">$</span>path.count[<span class="dv">3</span>,<span class="st">&#39;Agg&#39;</span>]<span class="op">/</span><span class="dv">2</span></span>
-<span id="cb1-42"><a href="#cb1-42"></a></span>
-<span id="cb1-43"><a href="#cb1-43"></a><span class="co">## non.essl.net.2</span></span>
-<span id="cb1-44"><a href="#cb1-44"></a>meandeg.non.essl<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="dv">1</span></span>
-<span id="cb1-45"><a href="#cb1-45"></a>fit.non.essl<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">ergm</span>(emptynet<span class="op">~</span>edges<span class="op">+</span><span class="st"> </span>concurrent, <span class="dt">target.stats=</span> <span class="kw">c</span>(meandeg.non.essl<span class="fl">.2</span><span class="op">*</span>n<span class="op">/</span><span class="dv">2</span>, <span class="dv">0</span>))</span>
-<span id="cb1-46"><a href="#cb1-46"></a>net.non.essl<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">simulate</span>(fit.non.essl<span class="fl">.2</span>, <span class="dt">control=</span><span class="kw">control.simulate</span>(<span class="dt">MCMC.burnin=</span><span class="fl">1e8</span>))</span>
-<span id="cb1-47"><a href="#cb1-47"></a>net.comb<span class="fl">.2</span> &lt;-<span class="st"> </span>net.non.essl<span class="fl">.2</span></span>
-<span id="cb1-48"><a href="#cb1-48"></a>net.comb<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">add.edges</span>(net.comb<span class="fl">.2</span>, <span class="dt">tail=</span>net.essl.el[,<span class="dv">1</span>], <span class="dt">head=</span>net.essl.el[,<span class="dv">2</span>])</span>
-<span id="cb1-49"><a href="#cb1-49"></a><span class="kw">plot</span>(net.comb<span class="fl">.2</span>, <span class="dt">vertex.cex=</span><span class="fl">1.5</span>, <span class="dt">vertex.col=</span><span class="dv">3</span><span class="op">+</span>essl, <span class="dt">edge.col=</span><span class="st">&quot;gray20&quot;</span>)</span>
-<span id="cb1-50"><a href="#cb1-50"></a>largcomp.comb<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">component.largest</span>(net.comb<span class="fl">.2</span>))</span>
-<span id="cb1-51"><a href="#cb1-51"></a>kpath.comb<span class="fl">.2</span> &lt;-<span class="st"> </span>sna<span class="op">:::</span><span class="kw">kpath.census</span>(net.comb<span class="fl">.2</span>)<span class="op">$</span>path.count[<span class="dv">3</span>,<span class="st">&#39;Agg&#39;</span>]<span class="op">/</span><span class="dv">2</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co">## setup</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(statnet)</a>
+<a class="sourceLine" id="cb1-3" title="3">n &lt;-<span class="st"> </span><span class="dv">200</span></a>
+<a class="sourceLine" id="cb1-4" title="4">emptynet &lt;-<span class="st"> </span><span class="kw">network.initialize</span>(n, <span class="dt">directed=</span><span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb1-5" title="5"></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="co">## pre-COVID network</span></a>
+<a class="sourceLine" id="cb1-7" title="7">meandeg.precov &lt;-<span class="st"> </span><span class="dv">15</span></a>
+<a class="sourceLine" id="cb1-8" title="8">fit.precov &lt;-<span class="st"> </span><span class="kw">ergm</span>(emptynet<span class="op">~</span>edges, <span class="dt">target.stats=</span>meandeg.precov<span class="op">*</span>n<span class="op">/</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb1-9" title="9">net.precov &lt;-<span class="st"> </span><span class="kw">simulate</span>(fit.precov)</a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="kw">plot</span>(net.precov, <span class="dt">vertex.cex=</span><span class="fl">1.5</span>, <span class="dt">mode=</span><span class="st">&quot;kamadakawai&quot;</span>, <span class="dt">vertex.col=</span><span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb1-11" title="11">     <span class="dt">edge.col=</span><span class="st">&quot;gray20&quot;</span>)</a>
+<a class="sourceLine" id="cb1-12" title="12">largcomp.precov &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">component.largest</span>(net.precov))</a>
+<a class="sourceLine" id="cb1-13" title="13"></a>
+<a class="sourceLine" id="cb1-14" title="14"><span class="co">## empty network</span></a>
+<a class="sourceLine" id="cb1-15" title="15"><span class="kw">plot</span>(emptynet, <span class="dt">vertex.cex=</span><span class="fl">1.5</span>, <span class="dt">mode=</span><span class="st">&quot;kamadakawai&quot;</span>, <span class="dt">vertex.col=</span><span class="dv">3</span>,</a>
+<a class="sourceLine" id="cb1-16" title="16">     <span class="dt">edge.col=</span><span class="st">&quot;gray20&quot;</span>)</a>
+<a class="sourceLine" id="cb1-17" title="17"></a>
+<a class="sourceLine" id="cb1-18" title="18"><span class="co">## essential network</span></a>
+<a class="sourceLine" id="cb1-19" title="19">meandeg.essl &lt;-<span class="st"> </span><span class="dv">4</span></a>
+<a class="sourceLine" id="cb1-20" title="20">prop.essl &lt;-<span class="st"> </span><span class="fl">0.1</span></a>
+<a class="sourceLine" id="cb1-21" title="21">essl &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, n)</a>
+<a class="sourceLine" id="cb1-22" title="22">essl[<span class="kw">sample</span>(<span class="dv">1</span><span class="op">:</span>n, <span class="kw">round</span>(prop.essl<span class="op">*</span>n,<span class="dv">0</span>), <span class="dt">replace=</span><span class="ot">FALSE</span>)] &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb1-23" title="23"><span class="kw">set.vertex.attribute</span>(emptynet, <span class="st">&#39;essl&#39;</span>, essl)</a>
+<a class="sourceLine" id="cb1-24" title="24">fit.essl &lt;-<span class="st"> </span><span class="kw">ergm</span>(emptynet<span class="op">~</span>edges<span class="op">+</span><span class="st"> </span><span class="kw">nodematch</span>(<span class="st">&quot;essl&quot;</span>, <span class="dt">diff=</span><span class="ot">TRUE</span>, <span class="dt">levels=</span><span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb1-25" title="25">              <span class="dt">target.stats=</span> <span class="kw">c</span>(meandeg.essl<span class="op">*</span>prop.essl<span class="op">*</span>n, <span class="dv">0</span>),</a>
+<a class="sourceLine" id="cb1-26" title="26">              <span class="dt">control=</span><span class="kw">control.ergm</span>(<span class="dt">MCMC.burnin =</span> <span class="fl">1e6</span>))</a>
+<a class="sourceLine" id="cb1-27" title="27">net.essl &lt;-<span class="st"> </span><span class="kw">simulate</span>(fit.essl, <span class="dt">control =</span> <span class="kw">control.simulate</span>(<span class="dt">MCMC.burnin =</span> <span class="fl">1e6</span>))</a>
+<a class="sourceLine" id="cb1-28" title="28">net.essl.el &lt;-<span class="st"> </span><span class="kw">as.edgelist</span>(net.essl)</a>
+<a class="sourceLine" id="cb1-29" title="29"><span class="kw">plot</span>(net.essl, <span class="dt">vertex.cex=</span><span class="fl">1.5</span>, <span class="dt">vertex.col=</span><span class="dv">3</span><span class="op">+</span>essl, <span class="dt">edge.col=</span><span class="st">&quot;gray20&quot;</span>)</a>
+<a class="sourceLine" id="cb1-30" title="30">largcomp.essl &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">component.largest</span>(net.essl))</a>
+<a class="sourceLine" id="cb1-31" title="31">kpath.essl &lt;-<span class="st"> </span>sna<span class="op">:::</span><span class="kw">kpath.census</span>(net.essl)<span class="op">$</span>path.count[<span class="dv">3</span>,<span class="st">&#39;Agg&#39;</span>]<span class="op">/</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb1-32" title="32"></a>
+<a class="sourceLine" id="cb1-33" title="33"><span class="co">## non.essl.net.1</span></a>
+<a class="sourceLine" id="cb1-34" title="34">meandeg.non.essl<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb1-35" title="35">fit.non.essl<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">ergm</span>(emptynet<span class="op">~</span>edges, <span class="dt">target.stats=</span> meandeg.non.essl<span class="fl">.1</span><span class="op">*</span>n<span class="op">/</span><span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb1-36" title="36">net.non.essl<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">simulate</span>(fit.non.essl<span class="fl">.1</span>)</a>
+<a class="sourceLine" id="cb1-37" title="37">net.comb<span class="fl">.1</span> &lt;-<span class="st"> </span>net.non.essl<span class="fl">.1</span></a>
+<a class="sourceLine" id="cb1-38" title="38">net.comb<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">add.edges</span>(net.comb<span class="fl">.1</span>, <span class="dt">tail=</span>net.essl.el[,<span class="dv">1</span>], <span class="dt">head=</span>net.essl.el[,<span class="dv">2</span>])</a>
+<a class="sourceLine" id="cb1-39" title="39"><span class="kw">plot</span>(net.comb<span class="fl">.1</span>, <span class="dt">vertex.cex=</span><span class="fl">1.5</span>, <span class="dt">vertex.col=</span><span class="dv">3</span><span class="op">+</span>essl, <span class="dt">edge.col=</span><span class="st">&quot;gray20&quot;</span>)</a>
+<a class="sourceLine" id="cb1-40" title="40">largcomp.comb<span class="fl">.1</span> &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">component.largest</span>(net.comb<span class="fl">.1</span>))</a>
+<a class="sourceLine" id="cb1-41" title="41">kpath.comb<span class="fl">.1</span> &lt;-<span class="st"> </span>sna<span class="op">:::</span><span class="kw">kpath.census</span>(net.comb<span class="fl">.1</span>)<span class="op">$</span>path.count[<span class="dv">3</span>,<span class="st">&#39;Agg&#39;</span>]<span class="op">/</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb1-42" title="42"></a>
+<a class="sourceLine" id="cb1-43" title="43"><span class="co">## non.essl.net.2</span></a>
+<a class="sourceLine" id="cb1-44" title="44">meandeg.non.essl<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb1-45" title="45">fit.non.essl<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">ergm</span>(emptynet<span class="op">~</span>edges<span class="op">+</span><span class="st"> </span>concurrent, <span class="dt">target.stats=</span> <span class="kw">c</span>(meandeg.non.essl<span class="fl">.2</span><span class="op">*</span>n<span class="op">/</span><span class="dv">2</span>, <span class="dv">0</span>))</a>
+<a class="sourceLine" id="cb1-46" title="46">net.non.essl<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">simulate</span>(fit.non.essl<span class="fl">.2</span>, <span class="dt">control=</span><span class="kw">control.simulate</span>(<span class="dt">MCMC.burnin=</span><span class="fl">1e8</span>))</a>
+<a class="sourceLine" id="cb1-47" title="47">net.comb<span class="fl">.2</span> &lt;-<span class="st"> </span>net.non.essl<span class="fl">.2</span></a>
+<a class="sourceLine" id="cb1-48" title="48">net.comb<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">add.edges</span>(net.comb<span class="fl">.2</span>, <span class="dt">tail=</span>net.essl.el[,<span class="dv">1</span>], <span class="dt">head=</span>net.essl.el[,<span class="dv">2</span>])</a>
+<a class="sourceLine" id="cb1-49" title="49"><span class="kw">plot</span>(net.comb<span class="fl">.2</span>, <span class="dt">vertex.cex=</span><span class="fl">1.5</span>, <span class="dt">vertex.col=</span><span class="dv">3</span><span class="op">+</span>essl, <span class="dt">edge.col=</span><span class="st">&quot;gray20&quot;</span>)</a>
+<a class="sourceLine" id="cb1-50" title="50">largcomp.comb<span class="fl">.2</span> &lt;-<span class="st"> </span><span class="kw">sum</span>(<span class="kw">component.largest</span>(net.comb<span class="fl">.2</span>))</a>
+<a class="sourceLine" id="cb1-51" title="51">kpath.comb<span class="fl">.2</span> &lt;-<span class="st"> </span>sna<span class="op">:::</span><span class="kw">kpath.census</span>(net.comb<span class="fl">.2</span>)<span class="op">$</span>path.count[<span class="dv">3</span>,<span class="st">&#39;Agg&#39;</span>]<span class="op">/</span><span class="dv">2</span></a></code></pre></div>
 </div>
 </div>
 
