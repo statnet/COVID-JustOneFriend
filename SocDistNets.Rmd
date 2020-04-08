@@ -52,7 +52,7 @@ Let's start by imagining back to the good old days, just a few short weeks or mo
 
 Now try to imagine what that might look like if you drew it. 
 
-## Then we get something like this:
+## The Network
 
 ```{r pre-COVID, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=6, fig.width=6, fig.align='center'}
 library(statnet)
@@ -104,7 +104,7 @@ Let's put a few numbers on it for comparison to later scenarios:
 
 Now let's imagine a world at the other extreme - complete and utter lock-down, where somehow we manage to keep every person in their household and never interact with anyone else.  
 
-## That would look like this:
+## The Network
 
 ```{r emptynet, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=5, fig.width=5, fig.align="center"}
 par(mai=c(0,0,0,0))
@@ -152,7 +152,7 @@ So, let's imagine what this might do to our network.
 Let's say that 1 in every 10 households contains someone with a job where they need to continue some connections. And the average number of connections they have is 4. 
 If we **color the households with an essential worker as blue**, that gives us...
 
-## Something that looks like this:
+## The Network
 
 ```{r essl.net, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=5, fig.width=5, fig.align="center"}
 meandeg.essl <- 4
@@ -216,7 +216,7 @@ But, we all know now: strict social distancing starts to get boring after a whil
 
 What happens if an average of two people in each household each decide to maintain an in-person social connection with one person from another household. 
 
-## Looks like: 
+## The Network 
 
 ```{r non.essl.net.1, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=5, fig.width=5, fig.align="center"}
 meandeg.non.essl.1 <- 2
@@ -278,7 +278,7 @@ If you are part of that large connected component, then now your household can r
 
 OK, maybe households with multiple people could all agree that only one person can hang out with one friend. This seems like it should have a lot less connectivity, right? 
 
-Let's see:
+## The Network
 
 ```{r non.essl.net.2, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=5, fig.width=5, fig.align="center"}
 meandeg.non.essl.2 <- 0.999
