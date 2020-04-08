@@ -13,6 +13,7 @@
 <meta name="author" content="Steven M. Goodreau, University of Washington" />
 <meta name="author" content="Emily D. Pollock, University of Washington" />
 <meta name="author" content="Jeanette K. Birnbaum, University of Washington" />
+<meta name="author" content="Deven T. Hamilton, University of Washington" />
 <meta name="author" content="Martina Morris, University of Washington" />
 <meta name="author" content="on behalf of the Statnet Development Team" />
 
@@ -2948,6 +2949,7 @@ div.tocify {
 <h4 class="author">Steven M. Goodreau, University of Washington</h4>
 <h4 class="author">Emily D. Pollock, University of Washington</h4>
 <h4 class="author">Jeanette K. Birnbaum, University of Washington</h4>
+<h4 class="author">Deven T. Hamilton, University of Washington</h4>
 <h4 class="author">Martina Morris, University of Washington</h4>
 <h4 class="author">on behalf of the Statnet Development Team</h4>
 <h4 class="date">4/3/2020</h4>
@@ -2983,7 +2985,7 @@ div.tocify {
 <p>Let’s put a few numbers on it for comparison to later scenarios:</p>
 <ul>
 <li><p>One important feature of a network that helps us to understand how far something might spread on it is the size of the <strong>“largest cluster”</strong>. That refers to the largest set of households who are all <strong>reachable</strong> to one another along any possible path—that is, there is at least one path of any length that connects the two households. (The technical term for this in network theory is a “component”, but we think the idea of a “cluster” is more familar to most people). Within a cluster, every household can be reached from every other household along at least one path—indeed, along many different ones—so the largest cluster includes <strong>200, or 100%, of the households</strong>.</p></li>
-<li><p>Another way of looking at connectivity is to count how many <strong>paths</strong> of different lengths there are. For instance, if household A is connected to household B, which is in turn connected to household C, which is in turn connected to household D, then that would represent a 3-path, because there are three links (A-B-C-D). One can count up all the 2-paths in a network, or the 3-paths, or 4-paths, and so on. Each one gives a sense of how well connected the network is–how many different routes are there that infection can spread on.. For simplicity, let’s focus on 3-paths. This network has <strong>380,880 different 3-paths</strong>. That’s a lot of different routes for a virus to transmit on! Note that people on those paths don’t all have to know one another. If you’re in household A, and you or a family member gets infected, then <strong>you could end up at the start of a chain that leads to household D getting infected, without you ever knowing who they are or the fact that they became sick!</strong> And with COVID-19, that could all happen before you have any symptoms and know that you’re infected.</p></li>
+<li><p>Another way of looking at connectivity is to count how many <strong>paths</strong> of different lengths there are. For instance, if household A is connected to household B, which is in turn connected to household C, which is in turn connected to household D, then that would represent a 3-path, because there are three links (A-B-C-D). One can count up all the 2-paths in a network, or the 3-paths, or 4-paths, and so on. Each one gives a sense of how well connected the network is—how many different routes are there that infection can spread on. For simplicity, let’s focus on 3-paths. This is a distance that is long enough that you might imagine the person at the other end of it (for example, the daughter of the grocery store worker where your friend’s parents shop, or your sister’s friend’s grandfather’s doctor). If you became infected, you could imagine a chain of transmission that extends all the way to this person, even if you never actually find out that that person got infected. And with COVID-19, that could all happen before you have any symptoms and know that you’re infected! This network has <strong>380,880 different 3-paths</strong>—that’s a lot of routes for a virus to transmit three steps on!</p></li>
 </ul>
 <p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
 </div>
