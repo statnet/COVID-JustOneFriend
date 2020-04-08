@@ -308,7 +308,7 @@ To examine this, then, we won't just set an *average* of one non-essential tie p
 
 This still creates a fair amount of connection - the **largest cluster contains `r largcomp.comb.2`.** That's still the majority of households, at  **`r round(100*largcomp.comb.2/n, 1)`%,** and **`r round(largcomp.comb.2/largcomp.essl, 1)` times larger than the essential network.**
 
-And there are still **`r kpath.comb.2`** 3-paths, or **`r round(kpath.comb.2/kpath.essl, 1)` times more than in the essential worker network alone.** That still allows for a lot of extra transmissions and illnesses and hospitalizations and deaths.
+And there are still **`r kpath.comb.2` 3-paths**, or **`r round(kpath.comb.2/kpath.essl, 1)` times more than in the essential worker network alone.** That still allows for a lot of extra transmissions and illnesses and hospitalizations and deaths.
 
 <br>
 <br>
@@ -357,7 +357,7 @@ You may never know whether it made a difference, and if it did, exactly whose li
 <br>
 <br>
 
-# The fine print for those who are interested: {.tabset}
+# The fine print for those who are interested {.tabset}
 
 ## Model caveats
 
