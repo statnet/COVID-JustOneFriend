@@ -65,7 +65,7 @@ What do we see?
 
 ## The Network
 
-```{r pre-COVID, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=6, fig.width=6, fig.align='center'}
+```{r pre-COVID, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=5, fig.width=5, fig.align='center'}
 library(statnet)
 set.seed(0)
 n <- 200
@@ -78,17 +78,14 @@ plot(net.precov, vertex.cex=1.5, mode="kamadakawai", vertex.col=3, edge.col="gra
 largcomp.precov <- sum(component.largest(net.precov))
 kpath.precov <- sna:::kpath.census(net.precov)$path.count[3,'Agg']/2
 ```
+**The connections among the nodes are so numerous that you can't even make sense of them---it's all just a single dense mass of ties. For a new virus that is able to spread across those ties, and to which everyone is susceptible, life is pretty good.**
 
-<br>
-<br>
 <br>
 <br>
 
 ## What's going on? 
 
-The connections among the nodes are so numerous that you can't even make sense of them---it's all just a single dense mass of ties. For a new virus that is able to spread across those ties, and to which everyone is susceptible, life is pretty good.
-
-Let's put a few numbers on it for comparison to later scenarios:
+Let's put a few numbers on what you see here for comparison to later scenarios:
 
 - One important feature of a network that helps us to understand how far something might spread on it is the size of the **"largest cluster"**. That refers to the largest set of households who are all **reachable** to one another along any possible path---that is, there is at least one path of any length that connects the two households. 
 
@@ -110,12 +107,6 @@ Let's put a few numbers on it for comparison to later scenarios:
 <br>
 <br>
 <br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 
 # Perfect isolation {.tabset .tabset-pills .tabset-fade}
 
@@ -127,17 +118,19 @@ Now let's imagine a world at the other extreme---complete and utter lock-down, w
 par(mai=c(0,0,0,0))
 plot(emptynet, vertex.cex=1.5, mode="kamadakawai", vertex.col=3, edge.col="gray20")
 ```
+**The virus would not be able to spread from household to household at all. Anyone who had it might pass it onto the other members of their household, and each of those people would either die or recover. But the virus could not spread to other households; it would quickly disappear.**
+<br>
+<br>
+<br>
 
-<br>
-<br>
-<br>
-<br>
 
 ## What's going on? 
 Here, the **largest cluster is of size 1**: every household is isolated from every other household. And of course there are **no 3-paths**.
 
 What does that mean? Here the virus would not be able to spread from household to household at all, because there are no links. **No household is reachable from any other.** Anyone who had it might pass it onto the other members of their household, and each of those people would either die or recover.  But the virus could not spread to other households; it would quickly disappear.
 
+<br>
+<br>
 <br>
 <br>
 <br>
@@ -187,15 +180,21 @@ par(mai=c(0,0,0,0))
 plot(net.essl, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
 largcomp.essl <- sum(component.largest(net.essl))
 kpath.essl <- sna:::kpath.census(net.essl)$path.count[3,'Agg']/2
-
 ```
+**The virus has some opportunity to move around here. This means that some people are going to get infected, and some people are going to die. It’s that simple. But these connections are so essential to the health and well-being of all of us that we as a society are willing to make that trade-off.**
+
 <br>
 <br>
 <br>
 <br>
+<br>
+<br>
+<br>
+<br>
+
 
 ## What's going on? 
-Even when States order people to "Stay Home", there are execptions for essential workers:
+Even when States order people to "Stay Home", there are exceptions for essential workers:
 
 - We need doctors and nurses and EMTs interacting with people.
 - We need all the people that get food to us---growing it, transporting it, selling it---to interact with people.
@@ -244,8 +243,12 @@ plot(net.comb.1, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
 largcomp.comb.1 <- sum(component.largest(net.comb.1))
 kpath.comb.1 <- sna:::kpath.census(net.comb.1)$path.count[3,'Agg']/2
 ```
+**This network is a lot more connected than the one with just essential workers.**
 
-<br>
+**Visiting your friend means that you can reach almost all the other households in your community, and they can reach you! That includes lots of people you don't even know. The virus can easily travel from them to you and then far beyond to many others. All before you even know you're infected. It’s a very connected, and effective, network of transmission.**
+
+**All of that leads to lots of additional deaths, just so people can hang out with one friend.**
+
 <br>
 <br>
 <br>
@@ -283,11 +286,6 @@ If you are part of that large cluster, then now your household can reach `r roun
 <br>
 <br>
 <br>
-<br>
-<br>
-<br>
-<br>
-<br>
 
 # Visiting just one friend per household {.tabset .tabset-pills .tabset-fade}
 
@@ -307,7 +305,8 @@ largcomp.comb.2 <- sum(component.largest(net.comb.2))
 kpath.comb.2 <- sna:::kpath.census(net.comb.2)$path.count[3,'Agg']/2
 ```
 
-<br>
+**Even with just one person per household getting to see a friend, there's still a lot more connectivity than in the network with just essential worker ties. And thus, more transmission, and more death.** 
+
 <br>
 <br>
 <br>
@@ -322,10 +321,6 @@ This still creates a fair amount of connection---the **largest cluster contains 
 
 And there are still **`r kpath.comb.2` 3-paths**, or **`r round(kpath.comb.2/kpath.essl, 1)` times more than in the essential worker network alone.** That still allows for a lot of extra transmissions and illnesses and hospitalizations and deaths.
 
-<br>
-<br>
-<br>
-<br>
 <br>
 <br>
 <br>
