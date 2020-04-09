@@ -2,6 +2,7 @@
 
 ## Description
 Webpage to explore how low-degree networks can create connectivity in the context of COVID-19
+https://statnet.org/COVID-JustOneFriend/
 
 ### Instructions
 
