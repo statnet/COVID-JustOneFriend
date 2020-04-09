@@ -1,8 +1,7 @@
 ---
 title: "**Can't I *please* just visit one friend?**"
-subtitle: "Visualizing social distancing networks in the era of COVID-19"
-author: 
- - Goodreau SM, Pollock ED, Birnbaum JK, Hamilton DT, Morris M, on behalf of the Statnet Development Team
+subtitle: <font size="6"> Visualizing social distancing networks in the era of COVID-19 </font>
+author: <font size="3"> Goodreau SM, Pollock ED, Birnbaum JK, Hamilton DT, Morris M, on behalf of the Statnet Development Team </font>
 date: "4/3/2020"
 output:
   html_document:
