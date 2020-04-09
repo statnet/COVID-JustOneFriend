@@ -35,11 +35,11 @@ For the most part you are doing so, because you are good people.
 
 But, you wonder---or perhaps, more likely, your kids wonder---**is there really so much harm in meeting up with just one friend?** 
 
-After all, there are all kinds of interactions still happening - between health care workers and patients, people in the food services industries and their customers, and so on.  Why does one more matter?
+After all, there are all kinds of interactions still happening---between health care workers and patients, people in the food services industries and their customers, and so on.  Why does one more matter?
 
 This is a question we've heard in a variety of forms, from our own friends and relatives.
 
-To be clear, when we talk about "meeting up" here, we mean doing so in a way that doesn't carefully follow all the rules about social distancing. That is, you interact directly or at a distance of less than 6 feet, and/or you share various items between you without rigorous handwashing and disinfecting.
+**To be clear, when we talk about "meeting up" here, we mean doing so in a way that doesn't carefully follow all the rules about social distancing.** That is, you interact directly or at a distance of less than 6 feet, and/or you share various items between you without rigorous handwashing and disinfecting.
 
 For many of the people asking the question, it seems particularly low-risk to meet up with a friend if neither one has an elderly person in their household, or someone else with a compromised immune system, given how concentrated the mortality is within those populations.
 
@@ -54,6 +54,14 @@ As network epidemiologists, this is our effort to explain why these connections 
 Let's start by imagining back to the good old days, just a few short weeks or months ago, before COVID-19 took off.  People had lots of daily interactions with lots of other people. They obviously varied in how many they had---some people had many, and some had few---but overall the number was a lot higher. Let's say, for the sake of the example, that the average household had 15 regular interactions with other households.
 
 Now try to imagine what that might look like if you drew it. 
+
+Often we visualize networks like this using diagrams with nodes and links.  Here we'll make one in which the **nodes (green dots) represent individual households**, and the **links (gray lines) represent frequent, repeated interactions** between any members of two households. 
+
+We'll look at 200 households and 15 ties per household (the exact number doesn't matter much here---we just want to imagine a world that is much more connected than it is under social distancing).
+
+What do we see?
+ 
+[For those who want to read more detail---and including a few more terms and numbers---click on the "What's Going On"? button, here and in each example below. For those who just want to compare the pictures, continue on.]
 
 ## The Network
 
@@ -77,16 +85,22 @@ kpath.precov <- sna:::kpath.census(net.precov)$path.count[3,'Agg']/2
 <br>
 
 ## What's going on? 
-Often we visualize networks like this using diagrams with nodes and links.  Here we'll make one in which the **nodes (green dots) represent individual households**, and the **links (gray lines) represent frequent, repeated interactions** between any members of two households. We'll consider scenarios involving 200 households, a small enough number that we can visualize the networks easily, and 15 ties per household (the exact number doesn't matter much here - we just want to imagine a world that is much more connected than it is under social distancing).
- 
-The result:  The connections among the nodes are so numerous that you can't even make sense of them - it's all just a single dense mass of ties. For a new virus that is able to spread across those ties, and to which everyone is susceptible, life is pretty good.
+
+The connections among the nodes are so numerous that you can't even make sense of them---it's all just a single dense mass of ties. For a new virus that is able to spread across those ties, and to which everyone is susceptible, life is pretty good.
 
 Let's put a few numbers on it for comparison to later scenarios:
 
-- One important feature of a network that helps us to understand how far something might spread on it is the size of the **"largest cluster"**. That refers to the largest set of households who are all **reachable** to one another along any possible path---that is, there is at least one path of any length that connects the two households. (The technical term for this in network theory is a "component", but we think the idea of a "cluster" is more familar to most people). Within a cluster, every household can be reached from every other household along at least one path---indeed, along many different ones---so the largest cluster includes **`r largcomp.precov`, or `r round(100*largcomp.precov/n, 0)`%, of the households**.
+- One important feature of a network that helps us to understand how far something might spread on it is the size of the **"largest cluster"**. That refers to the largest set of households who are all **reachable** to one another along any possible path---that is, there is at least one path of any length that connects the two households. 
 
-- Another way of looking at connectivity is to count how many **paths** of different lengths there are.  For instance, if household A is connected to household B, which is in turn connected to household C, which is in turn connected to household D, then that would represent a 3-path, because there are three links (A-B-C-D). One can count up all the 2-paths in a network, or the 3-paths, or 4-paths, and so on. Each one gives a sense of how well connected the network is---how many different routes are there that infection can spread on.  For simplicity, let's focus on 3-paths. This is a distance that is long enough that you might imagine the person at the other end of it (for example, the daughter of the grocery store worker where your friend's parents shop, or your sister's friend's grandfather's doctor). If you became infected, you could imagine a chain of transmission that extends all the way to this person, even if you never actually find out that that person got infected. And with COVID-19, that could all happen before you have any symptoms and know that you're infected! This network has **`r format(kpath.precov, scientific=F, big.mark=',')` different 3-paths**---that's a lot of routes for a virus to transmit three steps on!
+- In this network, every household can be reached from every other household along at least one path---indeed, along many different ones---so the **largest cluster includes all 200 households---that is, 100% of households**.
 
+- Another way of looking at connectivity is to count how many **paths** of different lengths there are.  For instance, if household A is connected to household B, which is in turn connected to household C, which is in turn connected to household D, then that would represent a 3-path, because there are three links (A-B-C-D).
+
+- One can count up all the 2-paths in a network, or the 3-paths, or 4-paths, and so on. Each one gives a sense of how well connected the network is---how many different routes are there that infection can spread on.  For simplicity, let's focus on 3-paths. This is a distance that is long enough that you might imagine the person at the other end of it---for example, the daughter of the grocery store worker where your friend's parents shop, or your sister's friend's grandfather's doctor. If you became infected, you could imagine a chain of transmission that extends all the way to this person, even if you never actually find out that that person got infected. And with COVID-19, that could all happen before you have any symptoms and know that you're infected! 
+
+- This network has **`r format(kpath.precov, scientific=F, big.mark=',')` different 3-paths**---that's a lot of routes for a virus to transmit three steps on!
+
+[Note: The technical term in network theory for a group of connected people is a "component", but we think the idea of a "cluster" is more familar to most people]. 
 <br>
 <br>
 <br>
@@ -105,7 +119,7 @@ Let's put a few numbers on it for comparison to later scenarios:
 
 # Perfect isolation {.tabset .tabset-pills .tabset-fade}
 
-Now let's imagine a world at the other extreme - complete and utter lock-down, where somehow we manage to keep every person in their household and never interact with anyone else.  
+Now let's imagine a world at the other extreme---complete and utter lock-down, where somehow we manage to keep every person in their household and never interact with anyone else. What does that look like?
 
 ## The Network
 
@@ -190,11 +204,9 @@ Even when States order people to "Stay Home", there are execptions for essential
 - In big cities, we need transport workers helping all of these people get back and forth between work and home.
 - And so on. 
 
-It's hard to put real numbers on this, but we'll start with what seems like a reasonable example. (For those who are interested and who have some R coding skills, all of the code for these examples is accessible on GitHub, info in the last section of this document, and you can explore different numbers.)
+It's hard to put real numbers on this, but we'll start with what seems like a reasonable example. Let's say they use hand washing and some distancing throughout the course of their work day as much as they can, so that they are able to bring their average effective contacts, in terms of reasonable transmission risk, down to 4.
 
-In reality, they may interact with many more people, but if they are able to use standard advice about hand washing and some distancing throughout the course of their work, let's say they're able to bring their average *effective* contacts, in terms of transmission probability, down to 4.  (You may notice that some essential households have more than 4 ties and some fewer---again, we just set the average and allowed there to be random variation around this).
-
-You can see that the virus has some room to move around again.  Not nearly as much as in the days before social distancing, but still some. And it isn't just between the households with essential workers and their direct contacts.  Sometimes the same household will be connected to two essential workers, creating a longer path. Sometimes two households with essential workers will end up directly connected, putting their two sets of contacts into the same path.
+You can see that the virus has some room to move around again---not nearly as much as in the days before social distancing, but still some. And it isn't just between the households with essential workers and their direct contacts.  Sometimes the same household will be connected to two essential workers, creating a longer path. Sometimes two households with essential workers will end up directly connected, putting their two sets of contacts into the same path.
 
 Altogether, we see here a **largest cluster of size `r largcomp.essl`, or `r round(100*largcomp.essl/n, 1)`%, of households.** (Can you find it?) This is a lot smaller than 100%, and a fair bit bigger than 0%.
 
@@ -217,7 +229,7 @@ And hopefully, the deaths here won't be that high. First off, most households ar
 
 But, we all know now: strict social distancing starts to get boring after a while. And meeting up to hang out with just one person outside your household---a friend especially---is pretty tempting.  And it just doesn't seem like such a big deal when these other connections are already happening, right?
 
-What happens if an average of two people in each household each decide to maintain an in-person social connection with one person from another household. 
+What happens if an average of two people in each household each decide to maintain an in-person social connection with one person from another household? 
 
 ## The Network 
 
@@ -302,11 +314,11 @@ kpath.comb.2 <- sna:::kpath.census(net.comb.2)$path.count[3,'Agg']/2
 
 ## What's going on? 
 
-Maybe parents don't feel like they need friend time as much as their kid does. Of course, if there are multiple kids, that creates a problem - eveyone will want to be the one who gets to hang out with their friend!  But let's say we could make it work.  
+Maybe parents don't feel like they need friend time as much as their kid does. Of course, if there are multiple kids, that creates a problem---eveyone will want to be the one who gets to hang out with their friend!  But let's say we could make it work.  
 
-To examine this, then, we won't just set an *average* of one non-essential tie per household; we'll make every household have exactly one, and no more. Pairs of households become connected, but then they don't create the same chains that are possible when there are two connections per household.  Does create much less connectivity than the case of two friends per household?  Not really.
+To examine this, then, we won't just set an *average* of one non-essential tie per household; we'll make every household have exactly one, and no more. Pairs of households become connected, but then they don't create the same chains that are possible when there are two connections per household. Bu this is still in addition to the essential worker connections. Does this create much less connectivity than the case of two friends per household?  Not really.
 
-This still creates a fair amount of connection - the **largest cluster contains `r largcomp.comb.2`.** That's still the majority of households, at  **`r round(100*largcomp.comb.2/n, 1)`%,** and **`r round(largcomp.comb.2/largcomp.essl, 1)` times larger than the essential network.**
+This still creates a fair amount of connection---the **largest cluster contains `r largcomp.comb.2`.** That's still the majority of households, at  **`r round(100*largcomp.comb.2/n, 1)`%,** and **`r round(largcomp.comb.2/largcomp.essl, 1)` times larger than the essential network.**
 
 And there are still **`r kpath.comb.2` 3-paths**, or **`r round(kpath.comb.2/kpath.essl, 1)` times more than in the essential worker network alone.** That still allows for a lot of extra transmissions and illnesses and hospitalizations and deaths.
 
@@ -337,9 +349,10 @@ And there are still **`r kpath.comb.2` 3-paths**, or **`r round(kpath.comb.2/kpa
 # Lessons learned
 
 **Humans are social animals, and reducing connectivity in social networks is hard.** 
-And some connections just can't broken at all if we want to maintain the basic functioning of the systems we need in place to all live. Other conections laid on top of those create more network connectivity than you might think. And thus, 
+And some connections just can't broken at all if we want to maintain the basic functioning of the systems we need in place to all live. Other connections laid on top of those create more network connectivity than you might think. And thus:
 
 **Every additional connection that we can postpone until COVID-19 is under control has the potential to save one or more lives.**  Yes, **every one**.  
+
 You may never know whether it made a difference, and if it did, exactly whose life was saved. 
 
 - They may be multiple degrees of separation away from you. 
@@ -350,7 +363,7 @@ You may never know whether it made a difference, and if it did, exactly whose li
 
 - They may be the daughter of the grocery store worker where your friend's parents shop. 
 
-**Regardless of who it is---waiting a bit to hang out your friends again is worth it!**
+**Regardless of who it is---waiting a bit to hang out with your friends again is worth it!**
 
 <br>
 <br>
