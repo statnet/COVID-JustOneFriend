@@ -2,12 +2,7 @@
 title: "**Can't I *please* just visit one friend?**"
 subtitle: "Visualizing social distancing networks in the era of COVID-19"
 author: 
- - Steven M. Goodreau, University of Washington
- - Emily D. Pollock, University of Washington
- - Jeanette K. Birnbaum, University of Washington
- - Deven T. Hamilton, University of Washington
- - Martina Morris, University of Washington
- - on behalf of the Statnet Development Team
+ - Goodreau SM, Pollock ED, Birnbaum JK, Hamilton DT, Morris M, on behalf of the Statnet Development Team
 date: "4/3/2020"
 output:
   html_document:
@@ -381,7 +376,6 @@ For those of you who find this interesting and have some coding skills in R, we 
 Mark S. Handcock, David R. Hunter, Carter T. Butts, Steven M. Goodreau, Pavel N. Krivitsky, Skye Bender-deMoll, and Martina Morris (2019). statnet: Software tools for the Statistical Modeling of Network Data. versin 2019.6. URL http://statnet.org, https://cran.r-project.org/web/packages/statnet/.
 
 
-
 ```{r full-code, eval=FALSE}
 
 ## setup
@@ -436,3 +430,7 @@ plot(net.comb.2, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
 largcomp.comb.2 <- sum(component.largest(net.comb.2))
 kpath.comb.2 <- sna:::kpath.census(net.comb.2)$path.count[3,'Agg']/2
 ```
+
+# Citation info 
+
+Goodreau SM, Pollock ED, Birnbaum JK, Hamilton DT, Morris M, on behalf of the Statnet Development Team.  2020. *Can't I please just visit one friend?: Visualizing social distancing networks in the era of COVID-19*. http://statnet.org/COVID-JustOneFriend/
