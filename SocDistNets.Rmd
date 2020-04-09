@@ -37,7 +37,7 @@ But, you wonder---or perhaps, more likely, your kids wonder---**is there really 
 
 After all, there are all kinds of interactions still happening---between health care workers and patients, people in the food services industries and their customers, and so on.  Why does one more matter?
 
-This is a question we've heard in a variety of forms, from our own friends and relatives.
+This is a question we've heard a lot from our own friends and relatives.
 
 **To be clear, when we talk about "meeting up" here, we mean doing so in a way that doesn't carefully follow all the rules about social distancing.** That is, you interact directly or at a distance of less than 6 feet, and/or you share various items between you without rigorous handwashing and disinfecting.
 
@@ -51,17 +51,13 @@ As network epidemiologists, this is our effort to explain why these connections 
 
 # The Good Ol' Days {.tabset .tabset-pills .tabset-fade}
 
-Let's start by imagining back to the good old days, just a few short weeks or months ago, before COVID-19 took off.  People had lots of daily interactions with lots of other people. They obviously varied in how many they had---some people had many, and some had few---but overall the number was a lot higher. Let's say, for the sake of the example, that the average household had 15 regular interactions with other households.
+Let's start by imagining back to the good old days before COVID-19 took off.  People had lots of daily interactions with lots of other people. They varied in how many---some people had many, and some had few---but overall the average was a lot higher. Let's say, for the sake of the example, that the average household had 15 regular interactions with other households.
 
-Now try to imagine what that might look like if you drew it. 
+Now try to imagine what that might look like if you drew it. Often we visualize networks like this using diagrams with nodes and links.  Here we'll make one in which the **nodes (green dots) represent individual households**, and the **links (gray lines) represent frequent, repeated interactions** between any members of two households. 
 
-Often we visualize networks like this using diagrams with nodes and links.  Here we'll make one in which the **nodes (green dots) represent individual households**, and the **links (gray lines) represent frequent, repeated interactions** between any members of two households. 
-
-We'll look at 200 households and 15 ties per household (the exact number doesn't matter much here---we just want to imagine a world that is much more connected than it is under social distancing).
-
-What do we see?
+We'll look at 200 households and 15 ties per household (the exact number doesn't matter much here---we just want to imagine a world that is much more connected than it is under social distancing). **What do we see?**
  
-[For those who want to read more detail---and including a few more terms and numbers---click on the "What's Going On"? button, here and in each example below. For those who just want to compare the pictures, continue on.]
+[For those who want to read more detail---including a few more terms and numbers---click on the "What's Going On"? button, here and in each example below. For those who just want to compare the pictures, continue on.]
 
 ## The Network
 
