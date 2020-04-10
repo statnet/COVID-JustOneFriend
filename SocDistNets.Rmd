@@ -1,7 +1,7 @@
 ---
 title: "**Can't I *please* just visit one friend?**"
 subtitle: <font size="6"> Visualizing social distancing networks in the era of COVID-19 </font>
-author: <font size="3" color="606060"> *Goodreau SM, Pollock ED, Birnbaum JK, Hamilton DT, Morris M, on behalf of the Statnet Development Team* </font>
+author: <font size="3" color="606060"> *Goodreau SM, Pollock ED, Birnbaum JK, Hamilton DT, Morris M, on behalf of the <a href="http://statnet.org"  target="_blank"> Statnet Development Team</a> and the UW Network Modeling Group* </font>
 date: "4/3/2020"
 output:
   html_document:
@@ -55,7 +55,7 @@ We'll look at 200 households and 15 ties per household (the exact number doesn't
 
 ## The Network
 
-```{r pre-COVID, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=5, fig.width=5, fig.align='center'}
+```{r pre-COVID, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=4, fig.width=4, fig.align='center'}
 library(statnet)
 set.seed(0)
 n <- 200
@@ -104,7 +104,7 @@ Now let's imagine a world at the other extreme---complete and utter lock-down, w
 
 ## The Network
 
-```{r emptynet, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=5, fig.width=5, fig.align="center"}
+```{r emptynet, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=4, fig.width=4, fig.align="center"}
 par(mai=c(0,0,0,0))
 plot(emptynet, vertex.cex=1.5, mode="kamadakawai", vertex.col=3, edge.col="gray20")
 ```
@@ -154,7 +154,7 @@ If we **color the households with an essential worker as blue**, that gives us..
 
 ## The Network
 
-```{r essl.net, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=5, fig.width=5, fig.align="center"}
+```{r essl.net, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=4, fig.width=4, fig.align="center"}
 meandeg.essl <- 4
 prop.essl <- 0.1
 essl <- rep(0, n)
@@ -222,7 +222,7 @@ What happens if an average of two people in each household each decide to mainta
 
 ## The Network 
 
-```{r non.essl.net.1, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=5, fig.width=5, fig.align="center"}
+```{r non.essl.net.1, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=4, fig.width=4, fig.align="center"}
 meandeg.non.essl.1 <- 2
 fit.non.essl.1 <- ergm(emptynet~edges, target.stats= meandeg.non.essl.1*n/2)
 net.non.essl.1 <- simulate(fit.non.essl.1)
@@ -283,7 +283,7 @@ OK, maybe households with multiple people could all agree that only one person c
 
 ## The Network
 
-```{r non.essl.net.2, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=5, fig.width=5, fig.align="center"}
+```{r non.essl.net.2, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=4, fig.width=4, fig.align="center"}
 meandeg.non.essl.2 <- 0.999
 fit.non.essl.2 <- ergm(emptynet~edges+ concurrent, target.stats= c(meandeg.non.essl.2*n/2, 0))
 net.non.essl.2 <- simulate(fit.non.essl.2, control=control.simulate(MCMC.burnin=1e8))
