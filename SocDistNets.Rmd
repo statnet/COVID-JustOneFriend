@@ -57,6 +57,7 @@ We'll look at 200 households and 15 ties per household (the exact number doesn't
 
 ```{r pre-COVID, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=4, fig.width=4, fig.align='center'}
 library(statnet)
+library(sna)
 set.seed(0)
 n <- 200
 emptynet <- network.initialize(n, directed=FALSE)
@@ -72,6 +73,14 @@ kpath.precov <- sna:::kpath.census(net.precov)$path.count[3,'Agg']/2
 
 <br>
 <br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 ## What's going on? 
 
@@ -81,18 +90,51 @@ Let's put a few numbers on what you see here for comparison to later scenarios:
 
 - In this network, every household can be reached from every other household along at least one path---indeed, along many different ones---so the **largest cluster includes all 200 households---that is, 100% of households**.
 
-- Another way of looking at connectivity is to count how many **paths** of different lengths there are.  For instance, if household A is connected to household B, which is in turn connected to household C, which is in turn connected to household D, then that would represent a 3-path, because there are three links (A-B-C-D).
+- Another way of looking at connectivity is to count how many households are reachable along a path of a certain length.  You've probably heard of the concept of "six degrees of separation"---that's someone who is your friend's friend's friend's friend's friend's friend.  We will use that concept here.  
 
-- One can count up all the 2-paths in a network, or the 3-paths, or 4-paths, and so on. Each one gives a sense of how well connected the network is---how many different routes are there that infection can spread on.  For simplicity, let's focus on 3-paths. This is a distance that is long enough that you might imagine the person at the other end of it---for example, the daughter of the grocery store worker where your friend's parents shop, or your sister's friend's grandfather's doctor. If you became infected, you could imagine a chain of transmission that extends all the way to this person, even if you never actually find out that that person got infected. And with COVID-19, that could all happen before you have any symptoms and know that you're infected! 
+- We'll look at each household, and measure on average how many other households are within **3 degrees of separation** from them, and also how many are within **6 degrees of separation**.  We use these two numbers because they help us understand how much connectivity there is at different scales. 
 
-- This network has **`r format(kpath.precov, scientific=F, big.mark=',')` different 3-paths**---that's a lot of routes for a virus to transmit three steps on!
+- **3 degrees of separation** represents someone you might have some sense of---someone in a household connected to a household connected to a household connected to you. Someone at that distance has a pretty  good chance of transmitting COVID to you (if they're infected) or you to them (if you're infected). And with COVID-19, that could all happen before you have any symptoms and know that you're infected! 
 
-[Note: The technical term in network theory for a group of connected people is a "component", but we think the idea of a "cluster" is more familar to most people]. 
-<br>
-<br>
-<br>
-<br>
-<br>
+- **And 6 degrees of separation** is, of course, a very popular concept, and one that tells you about people who are far enough away on a chain that you probably know nothing about them.  And yet there is a chance that they could be the source of a transmission chain that leads to you---or you could be the source of a transmission chain that leads to them.
+
+```{r, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE} 
+geo.sep <- function(net, netname, distances=c(3,6)) {
+  # Geodesic matrix - if not reachable, use NA
+  geo.mat <- sna:::geodist(net, inf.replace=NA)$gdist
+  # How many households are separated by distance x or less?
+  # Do a node-based, not dyad-based, mean
+  means <- sapply(distances, function(x) {
+    geo.count <- (geo.mat<=x)
+    # geo.count[lower.tri(geo.count, diag=TRUE)] <- NA
+    diag(geo.count) <- NA
+    return(mean(colSums(geo.count, na.rm=TRUE)))
+  })
+  
+  # Compute reachable nodes
+  #reachable <- geo.mat
+  #diag(reachable) <- NA
+  #num.reachable <- colSums(!is.na(reachable))
+  #print(summary(num.non.isolates))
+  #avg.reachable <- mean(num.reachable)
+
+ # Combine distances counts with reachable count
+  #means <- c(means, avg.reachable)
+  #names(means) <- c(distances, 'avg.reachable')
+  
+  return(means)
+}
+```
+
+```{r, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE} 
+geo.precov <-  geo.sep(net.precov)
+```
+
+In this pre-COVID network, the average household has **`r geo.precov[1]` other houses within 3 degrees of separation**. That means the entire community! This makes sense, because, with only 200 households, it is a small, and tight-knit place.  And of course, that means that all **`r geo.precov[2]` other households are also within 6 degrees of separation**.
+
+All of which means that a virus can quickly get around from one household to the whole community!
+
+[*Note: The technical term in network theory for a group of connected people is a "component", but we think the idea of a "cluster" is more familiar to most people*]. 
 <br>
 <br>
 <br>
@@ -115,15 +157,10 @@ plot(emptynet, vertex.cex=1.5, mode="kamadakawai", vertex.col=3, edge.col="gray2
 
 
 ## What's going on? 
-Here, the **largest cluster is of size 1**: every household is isolated from every other household. And of course there are **no 3-paths**.
+Here, the **largest cluster is of size 1**: every household is isolated from every other household. And of course, **no household is within either 3 or 6 degrees of separation from any other.** 
 
-What does that mean? Here the virus would not be able to spread from household to household at all, because there are no links. **No household is reachable from any other.** Anyone who had it might pass it onto the other members of their household, and each of those people would either die or recover.  But the virus could not spread to other households; it would quickly disappear.
+What does that mean? Here the virus would not be able to spread from household to household at all, because there are no links. Anyone who had it might pass it on to the other members of their household, and each of those people would either die or recover.  But the virus could not spread to other households; it would quickly disappear.
 
-<br>
-<br>
-<br>
-<br>
-<br>
 <br>
 <br>
 <br>
@@ -169,10 +206,15 @@ net.essl.el <- as.edgelist(net.essl)
 par(mai=c(0,0,0,0))
 plot(net.essl, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
 largcomp.essl <- sum(component.largest(net.essl))
-kpath.essl <- sna:::kpath.census(net.essl)$path.count[3,'Agg']/2
+geo.essl <-  geo.sep(net.essl)
 ```
+<br>
 **The virus has some opportunity to move around here. This means that some people are going to get infected, and some people are going to die. It’s that simple. But these connections are so essential to the health and well-being of all of us that we as a society are willing to make that trade-off.**
 
+<br>
+<br>
+<br>
+<br>
 <br>
 <br>
 <br>
@@ -197,9 +239,11 @@ It's hard to put real numbers on this, but we'll start with what seems like a re
 
 You can see that the virus has some room to move around again---not nearly as much as in the days before social distancing, but still some. And it isn't just between the households with essential workers and their direct contacts.  Sometimes the same household will be connected to two essential workers, creating a longer path. Sometimes two households with essential workers will end up directly connected, putting their two sets of contacts into the same path.
 
-Altogether, we see here a **largest cluster of size `r largcomp.essl`, or `r round(100*largcomp.essl/n, 1)`%, of households.** (Can you find it?) This is a lot smaller than 100%, and a fair bit bigger than 0%.
+Altogether, we see here a **largest cluster of size `r largcomp.essl`, or `r round(100*largcomp.essl/n, 1)`%, of households.** (Can you find it?) This is a lot smaller than 100%, but still a fair bit bigger than 0%!
 
-But households within the same cluster generally don't have lots of different paths by which they're connected.  So in total, there are **only `r kpath.essl` 3-paths.**  That's more than 0, but *much much much* less than 348,744!
+The average household has **`r round(geo.essl[1],1)` other households within 3 degrees of separation**, which represents `r round(100*geo.essl[1]/200, 2)`% of the community. There is some room for transmission to and from those you may know or know of, but not a lot.
+
+Going out a bit futher, we see the average household has **`r round(geo.essl[2],1)` of households within 6 degrees of separation**, which represents `r round(100*geo.essl[2]/200, 2)`% of the community. So some additional room to spread the virus well beyond the set of people you know, and vice versa.
 
 Let us be very clear here: some people are going to get infected, and some people are going to die, because of these connections.  It's that simple.  
 
@@ -207,10 +251,6 @@ But these connections are so essential that we as a society are willing to make 
 
 And hopefully, the deaths here won't be that high. First off, most households are still effectively isolated. And second, those that are connected are only held together by a pretty sparse set of ties, as reflected by the low number of 3-paths. Since transmission is not 100% guaranteed, not all of those in the same cluster as an infected person will become infected. This set of households are all **reachable** from one another, but it's not guaranteed that they will all actually be reached by a virus present in that cluster. The fewer the different routes connecting an infected person and a susceptible person, the less likely transmission will reach from one to the other.
 
-<br>
-<br>
-<br>
-<br>
 <br>
 <br>
 
@@ -231,7 +271,7 @@ net.comb.1 <- add.edges(net.comb.1, tail=net.essl.el[,1], head=net.essl.el[,2])
 par(mai=c(0,0,0,0))
 plot(net.comb.1, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
 largcomp.comb.1 <- sum(component.largest(net.comb.1))
-kpath.comb.1 <- sna:::kpath.census(net.comb.1)$path.count[3,'Agg']/2
+geo.comb.1 <-  geo.sep(net.comb.1)
 ```
 **This network is a lot more connected than the one with just essential workers.**
 
@@ -239,8 +279,6 @@ kpath.comb.1 <- sna:::kpath.census(net.comb.1)$path.count[3,'Agg']/2
 
 **All of that leads to lots of additional deaths, just so people can hang out with one friend.**
 
-<br>
-<br>
 <br>
 <br>
 
@@ -253,22 +291,16 @@ Let's say, then, that you decide to meet up with your friend Sue.  But if Sue's 
 
 What happens when we lay these new connections on top of the essential worker network?  A lot more connectivity.
 
-Indeed, the **largest cluster contains `r largcomp.comb.1`, or `r round(100*largcomp.comb.1/n, 1)`%, of households.** That is **`r round(largcomp.comb.1/largcomp.essl, 1)` times larger than the essential network.**
+Indeed, the **largest cluster contains `r largcomp.comb.1`, or `r round(100*largcomp.comb.1/n, 1)`%, of households.** That is **`r round(largcomp.comb.1/largcomp.essl, 1)` times larger than the essential network.** If you are part of that large cluster, then now your household can reach `r round(100*largcomp.comb.1/n, 1)`% of the households in your community, and they can reach you!
 
-And **the number of 3-paths here is `r kpath.comb.1`**.  That's **`r round(kpath.comb.1/kpath.essl, 1)` times larger than in the essential worker network!**  That's a lot more connections.  And therefore a lot more transmission, and a lot more death. Just so people can hang out with one friend!
+And **households here have, on average, `r round(geo.comb.1[1],1)` other households within a mere 3 degrees of separation**. That's a *huge* increase from the  `r round(geo.essl[1],1)` we saw for the essential worked-only network!
 
-If you are part of that large cluster, then now your household can reach `r round(100*largcomp.comb.1/n, 1)`% of the households in your community, and they can reach you! You may not even know the people in these households, and you won't even know whether you're part of that group or not. But the virus can easily travel along the network of connections to get from them to you, especially when there are multiple paths through the network. It's a very connected, and effective, network of transmission.
+We same effect going out further to **6 degrees of separation**, where now households average **`r round(geo.comb.1[2],1)` connections**, vs. **`r round(geo.essl[2],1)`** for the essential worked-only network. That's another *enormous* increase!
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+In short, we see many many more opportunites to acquire the virus from folks who are both near and far from you in the social network. And equally more oppportunities for you to transmit it on to other folks both near and far.
+
+All just so people can hang out with one friend!
+
 <br>
 <br>
 <br>
@@ -292,7 +324,7 @@ net.comb.2 <- add.edges(net.comb.2, tail=net.essl.el[,1], head=net.essl.el[,2])
 par(mai=c(0,0,0,0))
 plot(net.comb.2, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
 largcomp.comb.2 <- sum(component.largest(net.comb.2))
-kpath.comb.2 <- sna:::kpath.census(net.comb.2)$path.count[3,'Agg']/2
+geo.comb.2 <-  geo.sep(net.comb.2)
 ```
 
 **Even with just one person per household getting to see a friend, there's still a lot more connectivity than in the network with just essential worker ties. And thus, more transmission, and more death.** 
@@ -309,13 +341,10 @@ To examine this, then, we won't just set an *average* of one non-essential tie p
 
 This still creates a fair amount of connection---the **largest cluster contains `r largcomp.comb.2`.** That's still the majority of households, at  **`r round(100*largcomp.comb.2/n, 1)`%,** and **`r round(largcomp.comb.2/largcomp.essl, 1)` times larger than the essential network.**
 
-And there are still **`r kpath.comb.2` 3-paths**, or **`r round(kpath.comb.2/kpath.essl, 1)` times more than in the essential worker network alone.** That still allows for a lot of extra transmissions and illnesses and hospitalizations and deaths.
+And households still have an average of **`r round(geo.comb.2[1],1)` households within 3 degrees of separation or `r round(geo.comb.2[2],1)` within 6 degrees**. *Still* much larger than the same numbers for the essential-worker network (`r round(geo.essl[1],1)` and `r round(geo.essl[2],1)`, respectively).
 
-<br>
-<br>
-<br>
-<br>
-<br>
+That still allows for a lot of extra transmissions and illnesses and hospitalizations and deaths.
+
 <br>
 <br>
 <br>
@@ -333,6 +362,21 @@ And there are still **`r kpath.comb.2` 3-paths**, or **`r round(kpath.comb.2/kpa
 
 # Lessons learned
 
+
+```{r}
+# Compute
+distances <- rbind( geo.sep(net.precov, 'Pre-Covid'),
+    geo.sep(emptynet, 'Pure Isolation'),
+    geo.sep(net.essl, 'Essential Only'),
+    geo.sep(net.comb.1, 'Just One Friend'),
+    geo.sep(net.comb.2, 'Just One Friend Per HH'))
+
+# Labels
+net.order <- c('Pre-Covid', 'Pure Isolation', 
+               'Essential Only', 'Just One Friend', 
+               'Just One Friend Per HH')
+rownames(distances) <- net.order
+```
 **Humans are social animals, and reducing connectivity in social networks is hard.** 
 And some connections just can't broken at all if we want to maintain the basic functioning of the systems we need in place to all live. Other connections laid on top of those create more network connectivity than you might think. And thus:
 
@@ -370,7 +414,7 @@ All of those points are true. But we put them aside and purposefully simplified 
 
 ## Model code
 
-For those of you who find this interesting and have some coding skills in R, we include all of the code for all of these examples for you to look at and play with and change values for or add complexity to, as you wish.  Note that these examples use the *statnet* suite of R packages.  Thank you goes to the full **statnet development team** for all of these. Full citation information is:
+For those of you who find this interesting and have some coding skills in R, we include all of the code for all of these examples for you to look at and play with and change values for or add complexity to, as you wish. Note that these examples use the *statnet* suite of R packages.  Thank you goes to the full **statnet development team** for all of these. Full citation information is:
 
 Mark S. Handcock, David R. Hunter, Carter T. Butts, Steven M. Goodreau, Pavel N. Krivitsky, Skye Bender-deMoll, and Martina Morris (2019). statnet: Software tools for the Statistical Modeling of Network Data. versin 2019.6. URL http://statnet.org, https://cran.r-project.org/web/packages/statnet/.
 
