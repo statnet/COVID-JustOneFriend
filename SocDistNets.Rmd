@@ -1,7 +1,7 @@
 ---
 title: "**Can't I *please* just visit one friend?**"
 subtitle: <font size="6"> Visualizing social distancing networks in the era of COVID-19 </font>
-author: <font size="3" color="606060"> *Goodreau SM, Pollock ED, Birnbaum JK, Hamilton DT, Morris M, on behalf of the <a href="http://statnet.org"  target="_blank"> Statnet Development Team</a> and the UW Network Modeling Group* </font>
+author: <font size="3" color="606060"> *Goodreau SM, Pollock ED, Birnbaum JK, Hamilton DT, Morris M, on behalf of the UW Network Modeling Group* </font>
 date: "4/3/2020"
 output:
   html_document:
