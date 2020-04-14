@@ -41,7 +41,6 @@ As network epidemiologists, this is our effort to explain why these connections 
 
 <br>
 <br>
-<br>
 
 # The Good Ol' Days {.tabset .tabset-pills .tabset-fade}
 
@@ -69,14 +68,6 @@ kpath.precov <- sna:::kpath.census(net.precov)$path.count[3,'Agg']/2
 ```
 **The connections among the nodes are so numerous that you can't even make sense of them---it's all just a single dense mass of ties. For a new virus that is able to spread across those ties, and to which everyone is susceptible, life is pretty good.**
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <br>
 <br>
 
@@ -135,8 +126,7 @@ In this pre-COVID network, the average household has **`r geo.precov[1]` other h
 All of which means that a virus can quickly get around from one household to the whole community!
 
 [*Note: The technical term in network theory for a group of connected people is a "component", but we think the idea of a "cluster" is more familiar to most people*]. 
-<br>
-<br>
+  
 <br>
 <br>
 
@@ -151,33 +141,15 @@ par(mai=c(0,0,0,0))
 plot(emptynet, vertex.cex=1.5, mode="kamadakawai", vertex.col=3, edge.col="gray20")
 ```
 **The virus would not be able to spread from household to household at all. Anyone who had it might pass it onto the other members of their household, and each of those people would either die or recover. But the virus could not spread to other households; it would quickly disappear.**
+  
 <br>
 <br>
-<br>
-
 
 ## What's going on? 
 Here, the **largest cluster is of size 1**: every household is isolated from every other household. And of course, **no household is within either 3 or 6 degrees of separation from any other.** 
 
 What does that mean? Here the virus would not be able to spread from household to household at all, because there are no links. Anyone who had it might pass it on to the other members of their household, and each of those people would either die or recover.  But the virus could not spread to other households; it would quickly disappear.
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <br>
 <br>
 
@@ -213,17 +185,6 @@ geo.essl <-  geo.sep(net.essl)
 
 <br>
 <br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
 
 ## What's going on? 
 Even when States order people to "Stay Home", there are exceptions for essential workers:
@@ -303,11 +264,6 @@ All just so people can hang out with one friend!
 
 <br>
 <br>
-<br>
-<br>
-<br>
-<br>
-<br>
 
 # Visiting just one friend per household {.tabset .tabset-pills .tabset-fade}
 
@@ -331,7 +287,6 @@ geo.comb.2 <-  geo.sep(net.comb.2)
 
 <br>
 <br>
-<br>
 
 ## What's going on? 
 
@@ -345,18 +300,6 @@ And households still have an average of **`r round(geo.comb.2[1],1)` households 
 
 That still allows for a lot of extra transmissions and illnesses and hospitalizations and deaths.
 
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
 <br>
 <br>
 
@@ -396,8 +339,6 @@ You may never know whether it made a difference, and if it did, exactly whose li
 
 <br>
 <br>
-<br>
-<br>
 
 # The fine print for those who are interested {.tabset}
 
@@ -407,8 +348,6 @@ Now, you may be thinking -- isn't this picture a bit simplistic, in a bunch of w
 
 All of those points are true. But we put them aside and purposefully simplified the world a bit so that we could gain some clear insight about those scenarios first. This is a common approach in scientific investigation in general, and network epidemiology in particular.  Once one gains those insights, then one can begin adding in more complexity. Actual models used in the field of network epidemiology typically have a lot more complexity in them than the versions we look at here---but these are great for communicating basic principles to a broad audience.
 
-<br>
-<br>
 <br>
 <br>
 
