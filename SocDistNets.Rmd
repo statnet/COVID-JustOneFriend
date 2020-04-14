@@ -45,13 +45,11 @@ As network epidemiologists, this is our effort to explain why these connections 
 
 # The Good Ol' Days {.tabset .tabset-pills .tabset-fade}
 
-Let's start by imagining back to the good old days before COVID-19 took off.  People had lots of daily interactions with lots of other people. They varied in how many---some people had many, and some had few---but overall the average was a lot higher. Let's say, for the sake of the example, that the average household had 15 regular interactions with other households.
+Let's start by imagining back to the good old days before COVID-19.  People had lots of daily interactions with others outside their household. Let's say, for the sake of the example, that a community had 200 households, and the members of a typical household together created 15 regular interactions with other households.
 
-Now try to imagine what that might look like if you drew it. Often we visualize networks like this using diagrams with nodes and links.  Here we'll make one in which the **nodes (green dots) represent individual households**, and the **links (gray lines) represent frequent, repeated interactions** between any members of two households. 
-
-We'll look at 200 households and 15 ties per household (the exact number doesn't matter much here---we just want to imagine a world that is much more connected than it is under social distancing). **What do we see?**
+**What would that look like?** We can visualize a network as a set of nodes and links.  Here we'll make one in which the **nodes (green dots) represent households**, and the **links (gray lines) represent interactions** between members of two households. 
  
-[For those who want to read more detail---including a few more terms and numbers---click on the "What's Going On"? button, here and in each example below. For those who just want to compare the pictures, continue on.]
+[For those who want more detail---on terms, explanations and numbers---click on the "What's Going On"? button in each section; if you just want to compare the pictures, continue on!]
 
 ## The Network
 
@@ -83,6 +81,8 @@ kpath.precov <- sna:::kpath.census(net.precov)$path.count[3,'Agg']/2
 <br>
 
 ## What's going on? 
+
+The exact numbers we have chosen here here, like 200 households and 15 ties each, doesn't matter much---we just want to imagine a world that is much more connected than it is under social distancing.
 
 Let's put a few numbers on what you see here for comparison to later scenarios:
 
@@ -386,11 +386,11 @@ You may never know whether it made a difference, and if it did, exactly whose li
 
 - They may be multiple degrees of separation away from you. 
 
-- They may be your friend's mother's patient's father. 
+- It could be your friend's mother's patient's father. 
 
-- They may be your sister's friend's grandfather's doctor. 
+- It could be your sister's friend's grandfather's doctor. 
 
-- They may be the daughter of the grocery store worker where your friend's parents shop. 
+- It could be the daughter of the grocery store worker where your friend's parents shop. 
 
 **Regardless of who it is---waiting a bit to hang out with your friends again is worth it!**
 
