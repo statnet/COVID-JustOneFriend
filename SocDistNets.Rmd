@@ -82,7 +82,7 @@ kpath.precov <- sna:::kpath.census(net.precov)$path.count[3,'Agg']/2
 
 ## What's going on? 
 
-The exact numbers we have chosen here here, like 200 households and 15 ties each, doesn't matter much---we just want to imagine a world that is much more connected than it is under social distancing.
+The exact numbers we've chosen here, like 200 households and 15 ties each, don't matter much---we just want to imagine a world that is much more connected than it is under social distancing.
 
 Let's put a few numbers on what you see here for comparison to later scenarios:
 
