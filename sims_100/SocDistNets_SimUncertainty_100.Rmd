@@ -1,0 +1,414 @@
+---
+title: "Just One Friend - Simulation Uncertainty"
+author: "Jeanette Birnbaum"
+date: "4/15/2020"
+output:
+  html_document:
+    highlight: kate
+    theme: lumen
+    toc: yes
+    toc_float: true
+    number_sections: true
+    fig_width: 7
+    fig_height: 4
+    fig_caption: true
+    df_print: paged
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# "Original" full-code check
+
+1. Put code that's in the ``"full-code"`` chunk of SocDistNets.Rmd on Apr 15 at 2pm into a function (commit [6bc121a](https://github.com/statnet/COVID-JustOneFriend/commit/6bca21a57aa672cebe613843c328afef509c68e3)])
+2. Add ``set.seed=0`` before ``n <- 200``, as in the document
+3. Check ``largcomp.comp.2/200 = 0.71`` - use this as an anchor statistic
+
+```{r full-code, include=FALSE}
+# ## setup
+library(statnet)
+library(sna)
+
+# ------------------------------------------------------------
+# CHECK ORIGINAL CODE
+# ------------------------------------------------------------
+
+code_orig_full <- function(seed=0) {
+  
+  set.seed(seed)
+  n <- 200
+  emptynet <- network.initialize(n, directed=FALSE)
+  
+  ## pre-COVID network
+  meandeg.precov <- 15
+  fit.precov <- ergm(emptynet~edges, target.stats=meandeg.precov*n/2)
+  net.precov <- simulate(fit.precov)
+  plot(net.precov, vertex.cex=1.5, mode="kamadakawai", vertex.col=3,
+       edge.col="gray20")
+  largcomp.precov <- sum(component.largest(net.precov))
+  
+  ## empty network
+  plot(emptynet, vertex.cex=1.5, mode="kamadakawai", vertex.col=3,
+       edge.col="gray20")
+  
+  ## essential network
+  meandeg.essl <- 4
+  prop.essl <- 0.1
+  essl <- rep(0, n)
+  essl[sample(1:n, round(prop.essl*n,0), replace=FALSE)] <- 1
+  set.vertex.attribute(emptynet, 'essl', essl)
+  fit.essl <- ergm(emptynet~edges+ nodematch("essl", diff=TRUE, levels=1),
+                   target.stats= c(meandeg.essl*prop.essl*n, 0),
+                   control=control.ergm(MCMC.burnin = 1e6))
+  net.essl <- simulate(fit.essl, control = control.simulate(MCMC.burnin = 1e6))
+  net.essl.el <- as.edgelist(net.essl)
+  plot(net.essl, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
+  largcomp.essl <- sum(component.largest(net.essl))
+  kpath.essl <- sna:::kpath.census(net.essl)$path.count[3,'Agg']/2
+  
+  ## non.essl.net.1
+  meandeg.non.essl.1 <- 2
+  fit.non.essl.1 <- ergm(emptynet~edges, target.stats= meandeg.non.essl.1*n/2)
+  net.non.essl.1 <- simulate(fit.non.essl.1)
+  net.comb.1 <- net.non.essl.1
+  net.comb.1 <- add.edges(net.comb.1, tail=net.essl.el[,1], head=net.essl.el[,2])
+  plot(net.comb.1, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
+  largcomp.comb.1 <- sum(component.largest(net.comb.1))
+  kpath.comb.1 <- sna:::kpath.census(net.comb.1)$path.count[3,'Agg']/2
+  
+  ## non.essl.net.2
+  meandeg.non.essl.2 <- 1
+  fit.non.essl.2 <- ergm(emptynet~edges+ concurrent, target.stats= c(meandeg.non.essl.2*n/2, 0))
+  net.non.essl.2 <- simulate(fit.non.essl.2, control=control.simulate(MCMC.burnin=1e8))
+  net.comb.2 <- net.non.essl.2
+  net.comb.2 <- add.edges(net.comb.2, tail=net.essl.el[,1], head=net.essl.el[,2])
+  plot(net.comb.2, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
+  largcomp.comb.2 <- sum(component.largest(net.comb.2))
+  kpath.comb.2 <- sna:::kpath.census(net.comb.2)$path.count[3,'Agg']/2
+
+  return(largcomp.comb.2/200)
+}
+
+first_run_full <- code_orig_full()
+second_run_full <- code_orig_full()
+```
+
+The first time I run the original code taken from the full-code chunk, my target is 0.71 and I get `r  first_run_full`. When I run it again, I get `r second_run_full`.
+
+
+# "Original" chunk-code check
+
+Setting the seed allows replication of results, but why did I not hit the 0.71 target? Perhaps the full-code chunk is too out-of-date. Below is the code, aggregated from the chunks (same commit: [6bc121a](https://github.com/statnet/COVID-JustOneFriend/commit/6bca21a57aa672cebe613843c328afef509c68e3))
+
+```{r chunks-compiled, include=FALSE}
+code_orig_chunks <- function(seed=0) {
+  
+  # Chunk 2 - Pre-COVID
+  set.seed(seed)
+  n <- 200
+  emptynet <- network.initialize(n, directed=FALSE)
+  meandeg.precov <- 15
+  fit.precov <- ergm(emptynet~edges, target.stats=meandeg.precov*n/2)
+  net.precov <- simulate(fit.precov)
+  par(mai=c(0,0,0,0))
+  plot(net.precov, vertex.cex=1.5, mode="kamadakawai", vertex.col=3, edge.col="gray20")
+  largcomp.precov <- sum(component.largest(net.precov))
+  kpath.precov <- sna:::kpath.census(net.precov)$path.count[3,'Agg']/2
+  
+  # Chunk 3 - define geo.sep
+  geo.sep <- function(net, netname, distances=c(3,6)) {
+    # Geodesic matrix - if not reachable, use NA
+    geo.mat <- sna:::geodist(net, inf.replace=NA)$gdist
+    # How many households are separated by distance x or less?
+    # Do a node-based, not dyad-based, mean
+    means <- sapply(distances, function(x) {
+      geo.count <- (geo.mat<=x)
+      # geo.count[lower.tri(geo.count, diag=TRUE)] <- NA
+      diag(geo.count) <- NA
+      return(mean(colSums(geo.count, na.rm=TRUE)))
+    })
+    
+    # Compute reachable nodes
+    #reachable <- geo.mat
+    #diag(reachable) <- NA
+    #num.reachable <- colSums(!is.na(reachable))
+    #print(summary(num.non.isolates))
+    #avg.reachable <- mean(num.reachable)
+  
+   # Combine distances counts with reachable count
+    #means <- c(means, avg.reachable)
+    #names(means) <- c(distances, 'avg.reachable')
+    
+    return(means)
+  }
+  
+  # Chunk 4 - compute geo.precov
+  geo.precov <-  geo.sep(net.precov)
+  
+  # Chunk 5 - plot emptynet
+  par(mai=c(0,0,0,0))
+  plot(emptynet, vertex.cex=1.5, mode="kamadakawai", vertex.col=3, edge.col="gray20")
+  
+  # Chunk 6 - essl.net 
+  meandeg.essl <- 4
+  prop.essl <- 0.1
+  essl <- rep(0, n)
+  essl[sample(1:n, round(prop.essl*n,0), replace=FALSE)] <- 1
+  set.vertex.attribute(emptynet, 'essl', essl)
+  fit.essl <- ergm(emptynet~edges+ nodematch("essl", diff=TRUE, levels=1),
+                target.stats= c(
+                  meandeg.essl*prop.essl*n, 0),
+                control=control.ergm(MCMC.burnin = 1e6))
+  net.essl <- simulate(fit.essl, control = control.simulate(MCMC.burnin = 1e6))
+  net.essl.el <- as.edgelist(net.essl)
+  par(mai=c(0,0,0,0))
+  plot(net.essl, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
+  largcomp.essl <- sum(component.largest(net.essl))
+  geo.essl <-  geo.sep(net.essl)
+
+  # Chunk 7 - non.essl.net.1
+  meandeg.non.essl.1 <- 2
+  fit.non.essl.1 <- ergm(emptynet~edges, target.stats= meandeg.non.essl.1*n/2)
+  net.non.essl.1 <- simulate(fit.non.essl.1)
+  net.comb.1 <- net.non.essl.1
+  net.comb.1 <- add.edges(net.comb.1, tail=net.essl.el[,1], head=net.essl.el[,2])
+  par(mai=c(0,0,0,0))
+  plot(net.comb.1, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
+  largcomp.comb.1 <- sum(component.largest(net.comb.1))
+  geo.comb.1 <-  geo.sep(net.comb.1)
+  
+  # Chunk 8 - non.essl.net.2
+  meandeg.non.essl.2 <- 0.999
+  fit.non.essl.2 <- ergm(emptynet~edges+ concurrent, target.stats= c(meandeg.non.essl.2*n/2, 0))
+  net.non.essl.2 <- simulate(fit.non.essl.2, control=control.simulate(MCMC.burnin=1e8))
+  net.comb.2 <- net.non.essl.2
+  net.comb.2 <- add.edges(net.comb.2, tail=net.essl.el[,1], head=net.essl.el[,2])
+  par(mai=c(0,0,0,0))
+  plot(net.comb.2, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
+  largcomp.comb.2 <- sum(component.largest(net.comb.2))
+  geo.comb.2 <-  geo.sep(net.comb.2)
+  
+  # Chunk 9 - distances matrix
+  distances <- rbind( geo.sep(net.precov, 'Pre-Covid'),
+    geo.sep(emptynet, 'Pure Isolation'),
+    geo.sep(net.essl, 'Essential Only'),
+    geo.sep(net.comb.1, 'Just One Friend'),
+    geo.sep(net.comb.2, 'Just One Friend Per HH'))
+  
+  # Labels
+  net.order <- c('Pre-Covid', 'Pure Isolation', 
+                 'Essential Only', 'Just One Friend', 
+                 'Just One Friend Per HH')
+  rownames(distances) <- net.order
+  
+  return(largcomp.comb.2/200)
+}
+
+
+first_run_chunks <- code_orig_chunks()
+second_run_chunks <- code_orig_chunks()
+```
+
+The first time I run the original code taken from the chunks combined, my target is 0.71 and I get `r  first_run_chunks`. When I run it again, I get `r second_run_chunks`.
+
+# Multiple Simulations
+
+Process: because the Just One Friend / Just One Household networks are dependent on the Essential network, instead of adding an ``nsim=100`` argument to the simulate calls, I just put Steve's simulations in a loop and run 100 times, saving the largest component and degrees of separation statistics each time.
+
+I use ``set.seed(0)`` before fitting the models.
+
+For some reason, knitting this would always hang. Instead, source ``SocDistNets_SimUncertainty.R`` in a fresh R session. The next code chunk shows that code, without evaluating. The chunk after that reads in the results.
+
+## Code (not evaluated)
+```{r multiple-sims, eval=FALSE}
+# Number of sims ----------------------------------
+nsim <- 5
+
+# Matrix for results ------------------------------
+nets.to.loop <- c('Pre-Covid', 
+               'Essential Only', 'Just One Friend', 
+               'Just One Friend Per HH')
+nets.to.loop.ids <- c('precov', 'essl', 'comb.1', 'comb.2')
+empty.results.mat <- replicate(length(nets.to.loop), rep(NA,nsim))
+colnames(empty.results.mat) <- nets.to.loop.ids
+largest <- geo.3 <- geo.6 <- empty.results.mat
+
+# Model Fits --------------------------------------
+set.seed(0)
+n <- 200
+# Pre-Covid
+emptynet <- network.initialize(n, directed=FALSE)
+meandeg.precov <- 15
+fit.precov <- ergm(emptynet~edges, target.stats=meandeg.precov*n/2)
+# Essl
+meandeg.essl <- 4
+prop.essl <- 0.1
+essl <- rep(0, n)
+essl[sample(1:n, round(prop.essl*n,0), replace=FALSE)] <- 1
+set.vertex.attribute(emptynet, 'essl', essl)
+fit.essl <- ergm(emptynet~edges+ nodematch("essl", diff=TRUE, levels=1),
+              target.stats= c(
+                meandeg.essl*prop.essl*n, 0),
+              control=control.ergm(MCMC.burnin = 1e6))
+# non.essl.1
+meandeg.non.essl.1 <- 2
+fit.non.essl.1 <- ergm(emptynet~edges, target.stats= meandeg.non.essl.1*n/2)
+# non.essl.2
+meandeg.non.essl.2 <- 0.999
+fit.non.essl.2 <- ergm(emptynet~edges+ concurrent, target.stats= c(meandeg.non.essl.2*n/2, 0))
+
+# Chunk 3 - define geo.sep
+geo.sep <- function(net, netname, distances=c(3,6)) {
+  # Geodesic matrix - if not reachable, use NA
+  geo.mat <- sna:::geodist(net, inf.replace=NA)$gdist
+  # How many households are separated by distance x or less?
+  # Do a node-based, not dyad-based, mean
+  means <- sapply(distances, function(x) {
+    geo.count <- (geo.mat<=x)
+    # geo.count[lower.tri(geo.count, diag=TRUE)] <- NA
+    diag(geo.count) <- NA
+    return(mean(colSums(geo.count, na.rm=TRUE)))
+  })
+    
+    return(means)
+}
+
+# Code Loop ---------------------------------------
+# Have copied and pasted code from the aggregated chunks, 
+# removing the plotting and kpath calculations
+start <- Sys.time()
+for (i in 1:nsim) {
+  
+   # Chunk 2 - Pre-COVID
+  net.precov <- simulate(fit.precov)
+  largcomp.precov <- sum(component.largest(net.precov))
+  
+  
+  # Chunk 4 - compute geo.precov
+  geo.precov <-  geo.sep(net.precov)
+  
+  # Chunk 5 - plot emptynet
+  
+  # Chunk 6 - essl.net 
+  net.essl <- simulate(fit.essl, control = control.simulate(MCMC.burnin = 1e6))
+  net.essl.el <- as.edgelist(net.essl)
+  largcomp.essl <- sum(component.largest(net.essl))
+  geo.essl <-  geo.sep(net.essl)
+
+  # Chunk 7 - non.essl.net.1
+  net.non.essl.1 <- simulate(fit.non.essl.1)
+  net.comb.1 <- net.non.essl.1
+  net.comb.1 <- add.edges(net.comb.1, tail=net.essl.el[,1], head=net.essl.el[,2])
+  largcomp.comb.1 <- sum(component.largest(net.comb.1))
+  geo.comb.1 <-  geo.sep(net.comb.1)
+  
+  # Chunk 8 - non.essl.net.2
+  net.non.essl.2 <- simulate(fit.non.essl.2, control=control.simulate(MCMC.burnin=1e8))
+  net.comb.2 <- net.non.essl.2
+  net.comb.2 <- add.edges(net.comb.2, tail=net.essl.el[,1], head=net.essl.el[,2])
+  largcomp.comb.2 <- sum(component.largest(net.comb.2))
+  geo.comb.2 <-  geo.sep(net.comb.2) 
+  
+  # Fill results matrices: largest
+  largest[i,'precov'] <- largcomp.precov
+  largest[i,'essl'] <- largcomp.essl
+  largest[i,'comb.1'] <- largcomp.comb.1
+  largest[i,'comb.2'] <- largcomp.comb.2
+    
+  # Fill results matrix: geo.3
+  geo.3[i,'precov'] <- geo.precov[1]
+  geo.3[i,'essl'] <- geo.essl[1]
+  geo.3[i,'comb.1'] <- geo.comb.1[1]
+  geo.3[i,'comb.2'] <- geo.comb.2[1]
+    
+  # Fill results matrix: geo.6
+  geo.6[i,'precov'] <- geo.precov[2]
+  geo.6[i,'essl'] <- geo.essl[2]
+  geo.6[i,'comb.1'] <- geo.comb.1[2]
+  geo.6[i,'comb.2'] <- geo.comb.2[2]
+  
+  if (i==1) append.logical <- FALSE else append.logical <- TRUE
+  cat('\n',i,'....', as.character(Sys.time()), 
+      file='SocDistNets_SimUncertainty_Progress.txt', append=append.logical)
+}
+end <- Sys.time()
+```
+
+## Read in sim results and melt for plotting
+```{r, echo=TRUE, message=FALSE}
+largest <- read.csv('SocDistNets_SimUncertainty_100_largest.csv')
+geo.3 <- read.csv('SocDistNets_SimUncertainty_100_geo.3.csv')
+geo.6 <- read.csv('SocDistNets_SimUncertainty_100_geo.6.csv')
+
+library(ggplot2)
+library(reshape2)
+
+largest_long <- melt(largest)
+geo.3_long <- melt(geo.3)
+geo.6_long <- melt(geo.6)
+```
+
+## Runtime
+Note that sourcing ``SocDistNets_SimUncertainty.R`` took 24 minutes.
+
+## Peek at distributions
+Just showing the head of each results matrix - as a sanity check
+
+Largest component
+```{r, echo=TRUE}
+head(largest)
+```
+
+Three degrees of separation
+```{r, echo=TRUE}
+head(geo.3)
+```
+
+Six degrees of separation
+```{r, echo=TRUE}
+head(geo.6)
+```
+
+## Largest component
+Mean across `r nrow(largest)` simulations:
+
+```{r}
+knitr::kable(
+             data.frame(
+                        largest.Mean=colMeans(largest),
+                        largest.PercOf200=round(100*colMeans(largest)/200,1)
+                        )
+             )
+```
+
+```{r}
+ggplot(largest_long, aes(x=value, fill=variable)) + geom_histogram()
+```
+
+## Three degrees of separation
+Mean across `r nrow(geo.3)` simulations:
+```{r}
+knitr::kable(data.frame(
+                        geo.3.Mean=round(colMeans(geo.3),1),
+                        geo.3.PercOf200=round(100*colMeans(geo.3)/200,1)
+                        ))
+```
+
+```{r}
+ggplot(geo.3_long, aes(x=value, fill=variable)) + geom_histogram()
+```
+
+## Six degrees of separation
+Mean across `r nrow(geo.6)` simulations:
+```{r}
+knitr::kable(data.frame(
+                        geo.6.Mean=round(colMeans(geo.6),1),
+                        geo.6.PercOf200=round(100*colMeans(geo.6)/200,1)
+                        ))
+```
+
+```{r}
+ggplot(geo.6_long, aes(x=value, fill=variable)) + geom_histogram()
+```
