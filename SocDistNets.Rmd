@@ -340,6 +340,14 @@ You may never know whether it made a difference, and if it did, exactly whose li
 <br>
 <br>
 
+# Links to further exploration
+
+As you read through this, did you find yourself wondering: how would all of this change---the network pictures, or the numbers on the "What's Going On?" tabs---if we made different assumptions? For instance, if we imagined that essential workers had fewer contacts?  Or there were more essential workers? Or more households overall? 
+
+If so, then you're in luck---one of our readers, an environmental engineer from Bellingham, WA named Steve Hood---decided to code up an extended version of this page that explores different parameter values like these and more.  You can find his site at: https://steve-hood.shinyapps.io/OneFriend/. Thank you, Steve H!
+
+
+
 # The fine print for those who are interested {.tabset}
 
 ## Model caveats
