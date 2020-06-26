@@ -21,6 +21,16 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Important context
+
+This website was initially create in late March of 2020, during the rapid expansion of the first wave of COVID-19 in the United States. It reflects that context, a time when there was an urgent need everywhere to either "flatten the curve" or keep it from rising in the first place. Stay-at-home orders and social distancing rules were in place nearly universally throughout the country, even as many folks were struggling with following them.
+
+The epidemic is of course continuing to unfold, and we are not through this yet.  However, many settings have indeed brought their incidence down considerably, and have relaxed social distancing rules. At the same time other localities are seeing rising numbers.  And even as the first wave is not over, prospects for a second are always ahead. 
+
+All of this means that the exact trade-offs involved in visiting a friend now vary by location and context. However, the basic idea found in this webpage remains universal - if the virus is present and every household has just a few close face-to-face connections to others, there is a lot more room for spread through the population than if people limit those connections further.  
+
+Given all this, we will be keeping the remainder of the content of the webpage as is--but we will aim to periodically update this introduction to keep it up to date with the broad context.
+
 # The situation
 
 COVID-19 is raging around the world, and you and your family have been asked (OK, told) to stay home and practice social distancing.
