@@ -19,17 +19,25 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+# Install if you need these
+#install.packages("flexdashboard")
+#install.packages("statnet")
+#install.packages("sna")
+
+library(statnet)
+library(sna)
 ```
 
 # Important context
 
-This website was initially create in late March of 2020, during the rapid expansion of the first wave of COVID-19 in the United States. It reflects that context, a time when there was an urgent need everywhere to either "flatten the curve" or keep it from rising in the first place. Stay-at-home orders and social distancing rules were in place nearly universally throughout the country, even as many folks were struggling with following them.
+This website was initially created in late March of 2020, during the rapid expansion of the first wave of COVID-19 in the United States. It reflects that context, a time when there was an urgent need everywhere to either "flatten the curve" or keep it from rising in the first place. Stay-at-home orders and social distancing rules were in place nearly universally throughout the U.S. and many other countries in the world, even as folks were struggling with following them.
 
-The epidemic is of course continuing to unfold, and we are not through this yet.  However, many settings have indeed brought their incidence down considerably, and have relaxed social distancing rules. At the same time other localities are seeing rising numbers.  And even as the first wave is not over, prospects for a second are always ahead. 
+The epidemic continues to unfold.  Most settings have now brought their incidence down considerably, and have relaxed social distancing rules. Seasonal cycles of infection are beginning to be established.  At the same time, the virus continues to evolve, so the possibility of another large outbreak remains quietly in the background. 
 
-All of this means that the exact trade-offs involved in visiting a friend now vary by location and context. However, the basic idea found in this webpage remains universal - if the virus is present and every household has just a few close face-to-face connections to others, there is a lot more room for spread through the population than if people limit those connections further.  
+All of this means that the exact trade-offs involved in visiting a friend as you are reading this vary by location, context and time. However, the basic idea found in this webpage remains universal - once a virus like COVID is circulating, even if every household pulls back to allow only a very small number of face-to-face connections to other households, these few connections can still establish the potential for spread to a large fraction of the population.  
 
-Given all this, we will be keeping the remainder of the content of the webpage as is--but we will aim to periodically update this introduction to keep it up to date with the broad context.
+Given all this, we will be keeping the remainder of the content of the webpage as is--but will periodically update this introduction to keep it tracking the broad context.
 
 # The situation
 
@@ -63,19 +71,25 @@ Let's start by imagining back to the good old days before COVID-19.  People had 
 ## The Network
 
 ```{r pre-COVID, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=4, fig.width=4, fig.align='center'}
-library(statnet)
-library(sna)
+
+
 set.seed(0)
 n <- 200
 emptynet <- network.initialize(n, directed=FALSE)
 meandeg.precov <- 15
-fit.precov <- ergm(emptynet~edges, target.stats=meandeg.precov*n/2)
+
+fit.precov <- ergm(emptynet~edges,
+                   target.stats=meandeg.precov*n/2)
 net.precov <- simulate(fit.precov)
+
 par(mai=c(0,0,0,0))
-plot(net.precov, vertex.cex=1.5, mode="kamadakawai", vertex.col=3, edge.col="gray20")
+plot(net.precov, vertex.cex=1.5, mode="kamadakawai",
+     vertex.col=3, edge.col="gray20")
+
 largcomp.precov <- sum(component.largest(net.precov))
 kpath.precov <- sna:::kpath.census(net.precov)$path.count[3,'Agg']/2
 ```
+
 **The connections among the nodes are so numerous that you can't even make sense of them---it's all just a single dense mass of ties. For a new virus that is able to spread across those ties, and to which everyone is susceptible, life is pretty good.**
 
 <br>
@@ -100,6 +114,9 @@ Let's put a few numbers on what you see here for comparison to later scenarios:
 - **And 6 degrees of separation** is, of course, a very popular concept, and one that tells you about people who are far enough away on a chain that you probably know nothing about them.  And yet there is a chance that they could be the source of a transmission chain that leads to you---or you could be the source of a transmission chain that leads to them.
 
 ```{r, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE} 
+
+# Function to calculate geodesic summaries
+
 geo.sep <- function(net, netname, distances=c(3,6)) {
   # Geodesic matrix - if not reachable, use NA
   geo.mat <- sna:::geodist(net, inf.replace=NA)$gdist
@@ -128,7 +145,9 @@ geo.sep <- function(net, netname, distances=c(3,6)) {
 ```
 
 ```{r, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE} 
+
 geo.precov <-  geo.sep(net.precov)
+
 ```
 
 In this pre-COVID network, the average household has **`r geo.precov[1]` other houses within 3 degrees of separation**. That means the entire community! This makes sense, because, with only 200 households, it is a small, and tight-knit place.  And of course, that means that all **`r geo.precov[2]` other households are also within 6 degrees of separation**.
@@ -147,8 +166,13 @@ Now let's imagine a world at the other extreme---complete and utter lock-down, w
 ## The Network
 
 ```{r emptynet, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=4, fig.width=4, fig.align="center"}
+
 par(mai=c(0,0,0,0))
-plot(emptynet, vertex.cex=1.5, mode="kamadakawai", vertex.col=3, edge.col="gray20")
+plot(emptynet, vertex.cex=1.5, 
+     mode="kamadakawai", 
+     vertex.col=3, 
+     edge.col="gray20")
+
 ```
 **The virus would not be able to spread from household to household at all. Anyone who had it might pass it onto the other members of their household, and each of those people would either die or recover. But the virus could not spread to other households; it would quickly disappear.**
   
@@ -174,21 +198,30 @@ If we **color the households with an essential worker as blue**, that gives us..
 ## The Network
 
 ```{r essl.net, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=4, fig.width=4, fig.align="center"}
+
 meandeg.essl <- 4
 prop.essl <- 0.1
 essl <- rep(0, n)
 essl[sample(1:n, round(prop.essl*n,0), replace=FALSE)] <- 1
 set.vertex.attribute(emptynet, 'essl', essl)
-fit.essl <- ergm(emptynet~edges+ nodematch("essl", diff=TRUE, levels=1),
-              target.stats= c(
-                meandeg.essl*prop.essl*n, 0),
-              control=control.ergm(MCMC.burnin = 1e6))
-net.essl <- simulate(fit.essl, control = control.simulate(MCMC.burnin = 1e6))
+
+fit.essl <- ergm(emptynet ~ edges + nodematch("essl", diff=TRUE, levels=1),
+                 target.stats= c(meandeg.essl*prop.essl*n, 0),
+                 control=control.ergm(MCMC.burnin = 1e6))
+
+net.essl <- simulate(fit.essl, 
+                     control = control.simulate(MCMC.burnin = 1e6))
+
 net.essl.el <- as.edgelist(net.essl)
+
 par(mai=c(0,0,0,0))
-plot(net.essl, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
+plot(net.essl, 
+     vertex.cex=1.5, 
+     vertex.col=3+essl, 
+     edge.col="gray20")
 largcomp.essl <- sum(component.largest(net.essl))
 geo.essl <-  geo.sep(net.essl)
+
 ```
 <br>
 **The virus has some opportunity to move around here. This means that some people are going to get infected, and some people are going to die. It’s that simple. But these connections are so essential to the health and well-being of all of us that we as a society are willing to make that trade-off.**
@@ -234,13 +267,25 @@ What happens if an average of two people in each household each decide to mainta
 ## The Network 
 
 ```{r non.essl.net.1, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=4, fig.width=4, fig.align="center"}
+
 meandeg.non.essl.1 <- 2
-fit.non.essl.1 <- ergm(emptynet~edges, target.stats= meandeg.non.essl.1*n/2)
+
+fit.non.essl.1 <- ergm(emptynet ~ edges, 
+                       target.stats= meandeg.non.essl.1*n/2)
+
 net.non.essl.1 <- simulate(fit.non.essl.1)
+
 net.comb.1 <- net.non.essl.1
-net.comb.1 <- add.edges(net.comb.1, tail=net.essl.el[,1], head=net.essl.el[,2])
+net.comb.1 <- add.edges(net.comb.1, 
+                        tail=net.essl.el[,1], 
+                        head=net.essl.el[,2])
+
 par(mai=c(0,0,0,0))
-plot(net.comb.1, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
+plot(net.comb.1, 
+     vertex.cex=1.5, 
+     vertex.col=3+essl, 
+     edge.col="gray20")
+
 largcomp.comb.1 <- sum(component.largest(net.comb.1))
 geo.comb.1 <-  geo.sep(net.comb.1)
 ```
@@ -256,7 +301,7 @@ geo.comb.1 <-  geo.sep(net.comb.1)
 ## What's going on?
 Wow! This network is a lot more connected than the one with just essential workers.  
 
-Most households have more than one person in them. In fact, the **average household size in the US is 2.6 people.**   Some households will have none, and some will have 3, but on average it's 2.6.
+Most households have more than one person in them. In fact, the **average household size in the US is 2.6 people.**   Some households may have one, and others may have 10, but on average it's 2.6.
 
 Let's say, then, that you decide to meet up with your friend Sue.  But if Sue's parents are letting her go out, then they probably also need to let her brother Ed go out to meet up with his friend.  Note that this is still less than the average household size---not everybody is meeting up with a friend.
 
@@ -282,18 +327,31 @@ OK, maybe households with multiple people could all agree that only one person c
 ## The Network
 
 ```{r non.essl.net.2, cache=TRUE, echo=FALSE, warning=FALSE, error=FALSE, message=FALSE, fig.height=4, fig.width=4, fig.align="center"}
+
 meandeg.non.essl.2 <- 0.999
-fit.non.essl.2 <- ergm(emptynet~edges+ concurrent, target.stats= c(meandeg.non.essl.2*n/2, 0))
-net.non.essl.2 <- simulate(fit.non.essl.2, control=control.simulate(MCMC.burnin=1e8))
+
+fit.non.essl.2 <- ergm(emptynet ~ edges + concurrent, 
+                       target.stats= c(meandeg.non.essl.2*n/2, 0))
+
+net.non.essl.2 <- simulate(fit.non.essl.2,
+                           control=control.simulate(MCMC.burnin=1e8))
+
 net.comb.2 <- net.non.essl.2
-net.comb.2 <- add.edges(net.comb.2, tail=net.essl.el[,1], head=net.essl.el[,2])
+net.comb.2 <- add.edges(net.comb.2, 
+                        tail=net.essl.el[,1], 
+                        head=net.essl.el[,2])
+
 par(mai=c(0,0,0,0))
-plot(net.comb.2, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
+plot(net.comb.2, 
+     vertex.cex=1.5, 
+     vertex.col=3+essl, 
+     edge.col="gray20")
+
 largcomp.comb.2 <- sum(component.largest(net.comb.2))
 geo.comb.2 <-  geo.sep(net.comb.2)
 ```
 
-**Even with just one person per household getting to see a friend, there's still a lot more connectivity than in the network with just essential worker ties. And thus, more transmission, and more death.** 
+**Even with just one person per household getting to see a friend, there's still a lot more connectivity than in the network with just essential worker ties. And thus, more transmission, and more infection.** 
 
 <br>
 <br>
@@ -316,8 +374,9 @@ That still allows for a lot of extra transmissions and illnesses and hospitaliza
 # Lessons learned
 
 
-```{r}
-# Compute
+```{r lessons}
+
+# Compute geodesics
 distances <- rbind( geo.sep(net.precov, 'Pre-Covid'),
     geo.sep(emptynet, 'Pure Isolation'),
     geo.sep(net.essl, 'Essential Only'),
@@ -325,13 +384,18 @@ distances <- rbind( geo.sep(net.precov, 'Pre-Covid'),
     geo.sep(net.comb.2, 'Just One Friend Per HH'))
 
 # Labels
-net.order <- c('Pre-Covid', 'Pure Isolation', 
-               'Essential Only', 'Just One Friend', 
+net.order <- c('Pre-Covid', 
+               'Pure Isolation', 
+               'Essential Only', 
+               'Just One Friend', 
                'Just One Friend Per HH')
+
 rownames(distances) <- net.order
 ```
+
 **Humans are social animals, and reducing connectivity in social networks is hard.** 
-And some connections just can't broken at all if we want to maintain the basic functioning of the systems we need in place to all live. Other connections laid on top of those create more network connectivity than you might think. And thus:
+
+Some connections just can't broken at all if we want to maintain the basic functioning of the systems we need in place to all live. Other connections laid on top of those create more network connectivity than you might think. And thus:
 
 **Every additional connection that we can postpone until COVID-19 is under control has the potential to save one or more lives.**  Yes, **every one**.  
 
@@ -371,28 +435,38 @@ All of those points are true. But we put them aside and purposefully simplified 
 
 ## Model code
 
-For those of you who find this interesting and have some coding skills in R, we include all of the code for all of these examples for you to look at and play with and change values for or add complexity to, as you wish. Note that these examples use the *statnet* suite of R packages.  Thank you goes to the full **statnet development team** for all of these. Full citation information is:
-
-Mark S. Handcock, David R. Hunter, Carter T. Butts, Steven M. Goodreau, Pavel N. Krivitsky, Skye Bender-deMoll, and Martina Morris (2019). statnet: Software tools for the Statistical Modeling of Network Data. versin 2019.6. URL http://statnet.org, https://cran.r-project.org/web/packages/statnet/.
-
 
 ```{r full-code, eval=FALSE}
 
-## setup
+# Preliminaries:  Install if you need these
+#install.packages("flexdashboard")
+#install.packages("statnet")
+#install.packages("sna")
+
 library(statnet)
+library(sna)
+
+## setup
 n <- 200
 emptynet <- network.initialize(n, directed=FALSE)
 
 ## pre-COVID network
 meandeg.precov <- 15
-fit.precov <- ergm(emptynet~edges, target.stats=meandeg.precov*n/2)
+fit.precov <- ergm(emptynet~edges, 
+                   target.stats=meandeg.precov*n/2)
 net.precov <- simulate(fit.precov)
-plot(net.precov, vertex.cex=1.5, mode="kamadakawai", vertex.col=3,
+plot(net.precov, 
+     vertex.cex=1.5, 
+     mode="kamadakawai", 
+     vertex.col=3,
      edge.col="gray20")
 largcomp.precov <- sum(component.largest(net.precov))
 
 ## empty network
-plot(emptynet, vertex.cex=1.5, mode="kamadakawai", vertex.col=3,
+plot(emptynet, 
+     vertex.cex=1.5, 
+     mode="kamadakawai", 
+     vertex.col=3,
      edge.col="gray20")
 
 ## essential network
@@ -401,35 +475,70 @@ prop.essl <- 0.1
 essl <- rep(0, n)
 essl[sample(1:n, round(prop.essl*n,0), replace=FALSE)] <- 1
 set.vertex.attribute(emptynet, 'essl', essl)
-fit.essl <- ergm(emptynet~edges+ nodematch("essl", diff=TRUE, levels=1),
-              target.stats= c(meandeg.essl*prop.essl*n, 0),
-              control=control.ergm(MCMC.burnin = 1e6))
-net.essl <- simulate(fit.essl, control = control.simulate(MCMC.burnin = 1e6))
+
+fit.essl <- ergm(emptynet ~ edges + nodematch("essl", diff=TRUE, levels=1),
+                 target.stats= c(meandeg.essl*prop.essl*n, 0),
+                 control=control.ergm(MCMC.burnin = 1e6))
+net.essl <- simulate(fit.essl, 
+                     control = control.simulate(MCMC.burnin = 1e6))
+
 net.essl.el <- as.edgelist(net.essl)
-plot(net.essl, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
+
+plot(net.essl, 
+     vertex.cex=1.5, 
+     vertex.col=3+essl, 
+     edge.col="gray20")
+
 largcomp.essl <- sum(component.largest(net.essl))
 kpath.essl <- sna:::kpath.census(net.essl)$path.count[3,'Agg']/2
 
 ## non.essl.net.1
 meandeg.non.essl.1 <- 2
-fit.non.essl.1 <- ergm(emptynet~edges, target.stats= meandeg.non.essl.1*n/2)
+
+fit.non.essl.1 <- ergm(emptynet ~ edges, 
+                       target.stats= meandeg.non.essl.1*n/2)
+
 net.non.essl.1 <- simulate(fit.non.essl.1)
 net.comb.1 <- net.non.essl.1
 net.comb.1 <- add.edges(net.comb.1, tail=net.essl.el[,1], head=net.essl.el[,2])
-plot(net.comb.1, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
+
+plot(net.comb.1, 
+     vertex.cex=1.5, 
+     vertex.col=3+essl, 
+     edge.col="gray20")
+
 largcomp.comb.1 <- sum(component.largest(net.comb.1))
 kpath.comb.1 <- sna:::kpath.census(net.comb.1)$path.count[3,'Agg']/2
 
 ## non.essl.net.2
 meandeg.non.essl.2 <- 1
-fit.non.essl.2 <- ergm(emptynet~edges+ concurrent, target.stats= c(meandeg.non.essl.2*n/2, 0))
-net.non.essl.2 <- simulate(fit.non.essl.2, control=control.simulate(MCMC.burnin=1e8))
+
+fit.non.essl.2 <- ergm(emptynet ~ edges + concurrent, 
+                       target.stats= c(meandeg.non.essl.2*n/2, 0))
+
+net.non.essl.2 <- simulate(fit.non.essl.2,
+                           control=control.simulate(MCMC.burnin=1e8))
+
 net.comb.2 <- net.non.essl.2
 net.comb.2 <- add.edges(net.comb.2, tail=net.essl.el[,1], head=net.essl.el[,2])
-plot(net.comb.2, vertex.cex=1.5, vertex.col=3+essl, edge.col="gray20")
+
+plot(net.comb.2, 
+     vertex.cex=1.5, 
+     vertex.col=3+essl, 
+     edge.col="gray20")
+
 largcomp.comb.2 <- sum(component.largest(net.comb.2))
 kpath.comb.2 <- sna:::kpath.census(net.comb.2)$path.count[3,'Agg']/2
 ```
+
+For those of you who find this interesting and have some coding skills in R, this document contains the code you need to reproduce all of the examples on this website -- just click the "SHOW" button in the right margin above to see/copy the code for all sections.  Feel free to play with the code, try changing values or add complexity as you wish. If you come up with something interesting, [let us know](mailto:contact@statnet.org)!
+
+Note that these examples were created using the [*statnet*](https://statnet.org) suite of R packages for statistical network analysis, simulation and vizualization.  Thank you goes to the full **statnet development team** for their work. Full citation information for the version of *statnet* used to produce this website is:
+
+Mark S. Handcock, David R. Hunter, Carter T. Butts, Steven M. Goodreau, Pavel N. Krivitsky, Skye Bender-deMoll, and Martina Morris (2024). statnet: Software tools for the Statistical Modeling of Network Data. version 2019.6. URL https://statnet.org, https://cran.r-project.org/web/packages/statnet/.
+
+The examples here represent a tiny fraction of what can be done with *statnet*.  If you're interested in research-level epidemic modeling on networks, check out the [*EpiModel*](https://epimodel.org) package, which uses *statnet* to provide a robust platform for stochastic dynamic network modeling for epidemics.
+
 
 # Citation info 
 
