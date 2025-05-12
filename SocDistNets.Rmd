@@ -30,14 +30,9 @@ library(sna)
 ```
 
 # Important context
+This website was initially created in late March of 2020, during the rapid expansion of the first wave of COVID-19 in the United States. It reflects that context, a time when there was an urgent need everywhere to either "flatten the curve" or keep it from rising in the first place. Stay-at-home orders and social distancing rules were in place nearly universally throughout the U.S. and many other countries in the world, even as folks were struggling with following them. At the time this was made, masking among the general population was not yet recommended as a control strategy in the US, which is why it is not mentioned in here.
 
-This website was initially created in late March of 2020, during the rapid expansion of the first wave of COVID-19 in the United States. It reflects that context, a time when there was an urgent need everywhere to either "flatten the curve" or keep it from rising in the first place. Stay-at-home orders and social distancing rules were in place nearly universally throughout the U.S. and many other countries in the world, even as folks were struggling with following them.
-
-The epidemic continues to unfold.  Most settings have now brought their incidence down considerably, and have relaxed social distancing rules. Seasonal cycles of infection are beginning to be established.  At the same time, the virus continues to evolve, so the possibility of another large outbreak remains quietly in the background. 
-
-All of this means that the exact trade-offs involved in visiting a friend as you are reading this vary by location, context and time. However, the basic idea found in this webpage remains universal - once a virus like COVID is circulating, even if every household pulls back to allow only a very small number of face-to-face connections to other households, these few connections can still establish the potential for spread to a large fraction of the population.  
-
-Given all this, we will be keeping the remainder of the content of the webpage as is--but will periodically update this introduction to keep it tracking the broad context.
+The rest of this website after this line remains fixed to what it displayed at that time.
 
 # The situation
 
